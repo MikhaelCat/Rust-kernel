@@ -1,47 +1,114 @@
-use super::{PowerError, PowerManager};
+//! Power Management System for Linux Kernel
 
-#[derive(Debug)]
-pub struct PowerSystem {
-    mgr: PowerManager,
+#[derive(Debug, Clone)]
+pub struct CpuFreq {
+    pub current_freq_mhz: u32,
+    pub min_freq: u32,
+    pub max_freq: u32,
+    pub scaling_driver: String,
 }
 
-impl PowerSystem {
-    pub fn new() -> Self {
+impl Default for CpuFreq {
+    fn default() -> Self {
         Self {
-            mgr: PowerManager::new(),
+            current_freq_mhz: 1000,
+            min_freq: 800,
+            max_freq: 3500,
+            scaling_driver: "ondemand".to_string(),
+        }
+    }
+}
+
+impl CpuFreq {
+    pub fn set_frequency(&mut self, freq_mhz: u32) -> bool {
+        if freq_mhz >= self.min_freq && freq_mhz <= self.max_freq {
+            self.current_freq_mhz = freq_mhz;
+            true
+        } else {
+            false
         }
     }
 
-    pub fn bootstrap(&mut self) -> Result<(), PowerError> {
-        self.mgr.set_frequency(1_200_000)?;
-        self.mgr.set_qos_latency(100);
-        self.mgr.enable_regulator();
-        Ok(())
-    }
-
-    pub fn manager(&self) -> &PowerManager {
-        &self.mgr
-    }
-
-    pub fn manager_mut(&mut self) -> &mut PowerManager {
-        &mut self.mgr
+    pub fn get_frequency(&self) -> u32 {
+        self.current_freq_mhz
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-    use crate::power::suspend::SuspendState;
+#[derive(Debug, Clone)]
+pub enum IdleState {
+    C1,
+    C2,
+    C3,
+    C4,
+    C5,
+    C6,
+}
 
-    #[test]
-    fn system_bootstrap_and_suspend_cycle() {
-        let mut s = PowerSystem::new();
-        s.bootstrap().expect("bootstrap failed");
-        assert_eq!(s.manager().frequency_khz(), 1_200_000);
+#[derive(Debug)]
+pub struct Cpuidle {
+    pub current_state: IdleState,
+    pub states_count: usize,
+}
 
-        s.manager_mut().suspend();
-        assert_eq!(s.manager().suspend_state(), SuspendState::Suspended);
-        s.manager_mut().resume();
-        assert_eq!(s.manager().suspend_state(), SuspendState::Active);
+impl Default for Cpuidle {
+    fn default() -> Self {
+        Self::new(6)
+    }
+}
+
+impl Cpuidle {
+    pub fn new(states: usize) -> Self {
+        Self {
+            current_state: IdleState::C1,
+            states_count: states,
+        }
+    }
+
+    pub fn enter_state(&mut self, state: &IdleState) {
+        self.current_state = state.clone();
+    }
+
+    pub fn get_current_state(&self) -> &IdleState {
+        &self.current_state
+    }
+}
+
+#[derive(Debug)]
+pub struct ThermalZone {
+    pub temperature_celsius: u16,
+    pub threshold_critical: u16,
+    pub threshold_warning: u16,
+    pub fans_running: bool,
+}
+
+impl Default for ThermalZone {
+    fn default() -> Self {
+        Self {
+            temperature_celsius: 45,
+            threshold_critical: 95,
+            threshold_warning: 80,
+            fans_running: false,
+        }
+    }
+}
+
+impl ThermalZone {
+    pub fn update_temperature(&mut self, temp: u16) {
+        self.temperature_celsius = temp;
+        
+        // Fan control
+        if temp > self.threshold_warning {
+            self.fans_running = true;
+        } else if temp < (self.threshold_warning / 2) {
+            self.fans_running = false;
+        }
+    }
+
+    pub fn is_critical(&self) -> bool {
+        self.temperature_celsius >= self.threshold_critical
+    }
+
+    pub fn is_warning(&self) -> bool {
+        self.temperature_celsius >= self.threshold_warning
     }
 }

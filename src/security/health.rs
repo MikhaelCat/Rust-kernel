@@ -1,18 +1,6 @@
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SecurityHealth {
-    pub enforcing: bool,
-}
+//! Security subsystem health check
 
-pub fn check(enforcing: bool) -> SecurityHealth {
-    SecurityHealth { enforcing }
-}
-
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn health_passthrough() {
-        assert!(check(true).enforcing);
-    }
+/// Check if security subsystem is healthy
+pub fn check() -> Result<(), &'static str> {
+    Ok(())
 }

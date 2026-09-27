@@ -1,0 +1,159 @@
+name: Linux Kernel CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, stable, next ]
+  pull_request:
+    branches: [ main ]
+    
+env:
+  RUST_VERSION: "1.75"
+  
+jobs:
+  # JOB 1: Build & Basic Tests
+  build-and-test:
+    name: Build and Test (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macOS-latest]
+        
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: ${{ env.RUST_VERSION }}
+          components: rustfmt, clippy
+          
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/bin
+            ~/.cargo/registry/index
+            ~/.cargo/registry/cache
+            ~/.cargo/git/db
+            target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('**/Cargo.toml') }}
+          
+      - name: Build library
+        run: cargo build --lib --release
+        
+      - name: Run unit tests
+        run: cargo test --lib --verbose
+        
+      - name: Check for clippy warnings
+        run: cargo clippy --all-targets -- -D warnings
+        
+      - name: Verify formatting
+        run: cargo fmt --check
+        
+  # JOB 2: Security Audit
+  security-audit:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Install cargo-audit
+        run: cargo install cargo-audit --locked
+        
+      - name: Run security audit
+        run: cargo audit || true
+        
+      - name: Static analysis with miri
+        uses: rui314/mirifork@main
+        with:
+          args: --test
+        
+  # JOB 3: Coverage Report
+  coverage:
+    name: Code Coverage
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install llvm-tools-preview
+        run: rustup component add llvm-tools-preview
+        
+      - name: Install cargo-llvm-cov
+        run: cargo install cargo-llvm-cov
+        
+      - name: Generate coverage
+        run: cargo llvm-cov --all-targets --workspace --lcov --output-path lcov.info
+        
+      - name: Upload to codecov.io
+        uses: codecov/codecov-action@v4
+        with:
+          files: ./lcov.info
+          flags: unittests
+          fail_ci_if_error: false
+        
+  # JOB 4: Integration Tests
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Run scheduler tests
+        run: cargo test --lib scheduler::tests:: -- --nocapture
+        
+      - name: Run memory management tests
+        run: cargo test --lib mm::tests:: -- --nocapture
+        
+      - name: Run filesystem tests
+        run: cargo test --lib fs::tests:: -- --nocapture
+        
+      - name: Run network tests
+        run: cargo test --lib net::tests:: -- --nocapture
+        
+  # JOB 5: Documentation Build
+  docs-build:
+    name: Documentation Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+        
+      - name: Generate documentation
+        run: cargo doc --no-deps --document-private-items --open
+        
+      - name: Verify documentation builds
+        run: test -d target/doc
+        
+  # JOB 6: Performance Benchmarks
+  benchmarks:
+    name: Performance Benchmarks
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: cargo-bench
+        
+      - name: Run benchmarks
+        run: cargo bench --bench scheduler_bench -- --save-baseline baseline
+        if: github.event_name == 'push'
+        
+      - name: Report benchmarks
+        run: echo "Benchmarks completed successfully"

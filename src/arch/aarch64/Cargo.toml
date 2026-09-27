@@ -1,0 +1,20 @@
+[package]
+name = "rust_linux_kernel_arch/aarch64"
+version.workspace = true
+edition.workspace = true
+license.workspace = true
+description = "Linux kernel arch/aarch64 subsystem"
+
+[dependencies]
+rust_linux_kernel_core = { path = "../core", optional = true }
+
+[[lib]]
+path = "mod.rs"
+crate-type = ["rlib"]
+
+[dev-dependencies]
+criterion = "0.5"
+
+[[bench]]
+name = "benchmark"
+harness = false

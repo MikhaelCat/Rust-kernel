@@ -1,3 +1,5 @@
+//! System Call Interface for Linux Kernel on Rust
+
 pub mod clone;
 pub mod errno;
 pub mod execve;
@@ -25,3 +27,22 @@ pub mod waitpid;
 pub use harness::{AbiComplianceReport, run_abi_compliance};
 pub use harness_edge::{AbiEdgeReport, run_abi_edge_checks};
 pub use syscall::{AbiKernel, Sysno};
+
+#[derive(Debug, Clone)]
+pub struct SyscallStats {
+    pub total_syscalls: u64,
+    pub syscalls_by_type: Vec<u64>,
+    pub syscall_errors: u32,
+    pub avg_latency_ns: u64,
+}
+
+impl Default for SyscallStats {
+    fn default() -> Self {
+        Self {
+            total_syscalls: 0,
+            syscalls_by_type: vec![0; 512],
+            syscall_errors: 0,
+            avg_latency_ns: 0,
+        }
+    }
+}

@@ -79,3 +79,5 @@ pub mod health;
 pub mod system2;
 
 pub mod components;
+
+pub mod stats;

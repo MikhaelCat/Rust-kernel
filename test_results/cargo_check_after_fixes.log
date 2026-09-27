@@ -1,0 +1,2531 @@
+    Checking rust_linux_kernel v0.1.0 (/home/mihail/Documents/Qoder/2026-09-22/chat-4/linux-rust-kernel)
+error[E0432]: unresolved import `crate::arch::cpu`
+   --> src/drivers/mod.rs:223:18
+    |
+223 | use crate::arch::cpu::*;
+    |                  ^^^ could not find `cpu` in `arch`
+
+error[E0432]: unresolved imports `crate::security::lsm::AccessError`, `crate::security::lsm::AccessVector`, `crate::security::lsm::Capabilities`, `crate::security::lsm::ObjectCategory`, `crate::security::lsm::Permission`, `crate::security::lsm::Permissions`, `crate::security::lsm::SecurityHook`, `crate::security::lsm::SecurityLabel`, `crate::security::lsm::SecurityPolicy`, `crate::security::lsm::SecuritySubsystem`, `crate::security::lsm::SyscallContext`, `crate::security::lsm::TaskSecurityContext`, `crate::security::lsm::RlimitType`, `crate::security::lsm::AvcStats`
+  --> src/security/mod.rs:11:5
+   |
+11 |     AccessError, AccessVector, Capabilities, ObjectCategory, Permission, Permissions,
+   |     ^^^^^^^^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^  ^^^^^^^^^^^ no `Permissions` in `security::lsm`
+   |     |            |             |             |               |
+   |     |            |             |             |               no `Permission` in `security::lsm`
+   |     |            |             |             no `ObjectCategory` in `security::lsm`
+   |     |            |             no `Capabilities` in `security::lsm`
+   |     |            no `AccessVector` in `security::lsm`
+   |     no `AccessError` in `security::lsm`
+12 |     SecurityHook, SecurityLabel, SecurityPolicy, SecuritySubsystem, SyscallContext,
+   |     ^^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^
+   |     |             |              |               |
+   |     |             |              |               no `SecuritySubsystem` in `security::lsm`
+   |     |             |              no `SecurityPolicy` in `security::lsm`
+   |     |             no `SecurityLabel` in `security::lsm`
+   |     no `SecurityHook` in `security::lsm`
+13 |     TaskSecurityContext, RlimitType, AvcStats,
+   |     ^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^  ^^^^^^^^
+   |
+   = help: consider importing this struct instead:
+           std::thread::AccessError
+   = help: consider importing this struct instead:
+           std::fs::Permissions
+
+error[E0432]: unresolved import `crate::security::selinux::SelinuxPolicy`
+  --> src/security/mod.rs:16:9
+   |
+16 | pub use crate::security::selinux::SelinuxPolicy;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `SelinuxPolicy` in `security::selinux`
+
+error[E0432]: unresolved import `super::clocksource::ClockSource`
+ --> src/time/system.rs:1:37
+  |
+1 | ...r, clocksource::ClockSource, ntp::NtpAdjust};
+  |       ^^^^^^^^^^^^^^^^^^^^^^^^ no `ClockSource` in `time::clocksource`
+  |
+help: a similar name exists in the module (notice the capitalization)
+  |
+1 - use super::{TimeError, TimeManager, clocksource::ClockSource, ntp::NtpAdjust};
+1 + use super::{TimeError, TimeManager, clocksource::Clocksource, ntp::NtpAdjust};
+  |
+
+error[E0432]: unresolved import `crate::boot::recovery`
+   --> src/init/mod.rs:157:18
+    |
+157 | use crate::boot::recovery::{RecoveryMode, choose_recovery};
+    |                  ^^^^^^^^ could not find `recovery` in `boot`
+
+error[E0432]: unresolved import `crate::sched::CfsStats`
+ --> src/kernel/stats.rs:5:5
+  |
+5 | use crate::sched::CfsStats;
+  |     ^^^^^^^^^^^^^^^^^^^^^^ no `CfsStats` in `sched`
+  |
+help: consider importing this struct instead
+  |
+5 | use crate::sched::cfs::CfsStats;
+  |                   +++++
+
+error[E0432]: unresolved import `crate::drivers::DriverStats`
+  --> src/kernel/stats.rs:10:5
+   |
+10 | use crate::drivers::DriverStats;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `DriverStats` in `drivers`
+
+error[E0432]: unresolved import `crate::ipc::IpcStats`
+  --> src/kernel/stats.rs:11:5
+   |
+11 | use crate::ipc::IpcStats;
+   |     ^^^^^^^^^^^^^^^^^^^^ no `IpcStats` in `ipc`
+
+error[E0432]: unresolved import `crate::boot::BootStats`
+  --> src/kernel/stats.rs:13:5
+   |
+13 | use crate::boot::BootStats;
+   |     ^^^^^^^^^^^^^^^^^^^^^^ no `BootStats` in `boot`
+
+error[E0432]: unresolved import `crate::power::PowerStats`
+  --> src/kernel/stats.rs:14:5
+   |
+14 | use crate::power::PowerStats;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^ no `PowerStats` in `power`
+
+error[E0432]: unresolved import `crate::crypto::CryptoStats`
+  --> src/kernel/stats.rs:15:5
+   |
+15 | use crate::crypto::CryptoStats;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^ no `CryptoStats` in `crypto`
+
+error[E0432]: unresolved imports `vm::VmArea`, `vm::VmaMap`
+  --> src/mm/mod.rs:17:14
+   |
+17 | pub use vm::{VmArea, VmaMap};
+   |              ^^^^^^  ^^^^^^ no `VmaMap` in `mm::vm`
+   |              |
+   |              no `VmArea` in `mm::vm`
+   |
+   = help: consider importing this struct through its public re-export instead:
+           crate::vm::VmArea
+   = help: consider importing this struct through its public re-export instead:
+           crate::vm::VmaMap
+
+error[E0432]: unresolved imports `crate::mm::VmaManager`, `crate::mm::Vma`
+ --> src/mm/fault.rs:6:17
+  |
+6 | use crate::mm::{VmaManager, Vma, PageFrame, PhysicalMemoryManager};
+  |                 ^^^^^^^^^^  ^^^ no `Vma` in `mm`
+  |                 |
+  |                 no `VmaManager` in `mm`
+  |
+  = help: consider importing this struct instead:
+          crate::mm::vm::VmaManager
+  = help: consider importing this struct instead:
+          crate::mm::vm::Vma
+help: a similar name exists in the module
+  |
+6 - use crate::mm::{VmaManager, Vma, PageFrame, PhysicalMemoryManager};
+6 + use crate::mm::{manager, Vma, PageFrame, PhysicalMemoryManager};
+  |
+help: a similar name exists in the module
+  |
+6 - use crate::mm::{VmaManager, Vma, PageFrame, PhysicalMemoryManager};
+6 + use crate::mm::{VmaManager, cma, PageFrame, PhysicalMemoryManager};
+  |
+
+error[E0432]: unresolved imports `super::fault::FaultAction`, `super::fault::PageFault`, `super::fault::handle_fault`
+ --> src/mm/manager.rs:2:20
+  |
+2 | use super::fault::{FaultAction, PageFault, handle_fault};
+  |                    ^^^^^^^^^^^  ^^^^^^^^^  ^^^^^^^^^^^^ no `handle_fault` in `mm::fault`
+  |                    |            |
+  |                    |            no `PageFault` in `mm::fault`
+  |                    no `FaultAction` in `mm::fault`
+
+error[E0432]: unresolved imports `super::fault::FaultAction`, `super::fault::PageFault`, `super::fault::handle_fault`
+ --> src/mm/semantics.rs:1:20
+  |
+1 | use super::fault::{FaultAction, PageFault, handle_fault};
+  |                    ^^^^^^^^^^^  ^^^^^^^^^  ^^^^^^^^^^^^ no `handle_fault` in `mm::fault`
+  |                    |            |
+  |                    |            no `PageFault` in `mm::fault`
+  |                    no `FaultAction` in `mm::fault`
+
+error[E0432]: unresolved imports `super::cfs::CfsRunQueue`, `super::cfs::NiceToWeight`
+ --> src/sched/manager.rs:5:18
+  |
+5 | use super::cfs::{CfsRunQueue, NiceToWeight};
+  |                  ^^^^^^^^^^^  ^^^^^^^^^^^^ no `NiceToWeight` in `sched::cfs`
+  |                  |
+  |                  no `CfsRunQueue` in `sched::cfs`
+
+error[E0432]: unresolved import `super::manager::SchedClass`
+ --> src/sched/system.rs:3:22
+  |
+3 | use super::manager::{SchedClass, SchedulerManager};
+  |                      ^^^^^^^^^^ no `SchedClass` in `sched::manager`
+
+error[E0432]: unresolved imports `super::TimeError`, `super::TimeManager`, `super::ntp`
+ --> src/time/system.rs:1:13
+  |
+1 | ...uper::{TimeError, TimeManager, clocksource::ClockSource, ntp::NtpAdjust};
+  |           ^^^^^^^^^  ^^^^^^^^^^^ no `TimeManager` in `time` ^^^ could not find `ntp` in `super`
+  |           |
+  |           no `TimeError` in `time`
+  |
+help: a similar name exists in the module
+  |
+1 | use super::{TimersError, TimeManager, clocksource::ClockSource, ntp::NtpAdjust};
+  |                 ++
+
+error[E0432]: unresolved import `crate::boot::BootParams`
+ --> src/system.rs:2:5
+  |
+2 | use crate::boot::BootParams;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^ no `BootParams` in `boot`
+
+error[E0432]: unresolved import `crate::boot::system`
+ --> src/system.rs:3:18
+  |
+3 | use crate::boot::system::boot_smoke;
+  |                  ^^^^^^ could not find `system` in `boot`
+
+error[E0432]: unresolved import `crate::drivers::DriverSystem`
+ --> src/system.rs:4:5
+  |
+4 | use crate::drivers::DriverSystem;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `DriverSystem` in `drivers`
+
+error[E0432]: unresolved import `crate::ipc::IpcSystem`
+ --> src/system.rs:7:5
+  |
+7 | use crate::ipc::IpcSystem;
+  |     ^^^^^^^^^^^^^^^^^^^^^ no `IpcSystem` in `ipc`
+
+error[E0432]: unresolved import `crate::power::PowerSystem`
+  --> src/system.rs:12:5
+   |
+12 | use crate::power::PowerSystem;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^ no `PowerSystem` in `power`
+
+error[E0432]: unresolved import `crate::security::health`
+  --> src/system.rs:13:22
+   |
+13 | use crate::security::health::check as security_check;
+   |                      ^^^^^^ could not find `health` in `security`
+
+error[E0432]: unresolved import `crate::security::integration`
+  --> src/system.rs:14:22
+   |
+14 | use crate::security::integration::security_may_enforce;
+   |                      ^^^^^^^^^^^ could not find `integration` in `security`
+
+error[E0432]: unresolved import `crate::syscall::fault_matrix`
+  --> src/system.rs:15:21
+   |
+15 | use crate::syscall::fault_matrix::validate_fault_matrix;
+   |                     ^^^^^^^^^^^^ could not find `fault_matrix` in `syscall`
+
+error[E0432]: unresolved import `crate::block::manager`
+ --> src/sys_runtime.rs:1:19
+  |
+1 | use crate::block::manager::BlockManager;
+  |                   ^^^^^^^ could not find `manager` in `block`
+
+error[E0432]: unresolved imports `crate::block::bio`, `crate::block::device`
+ --> src/sys_runtime.rs:2:20
+  |
+2 | use crate::block::{bio::Bio, device::BlockDevice};
+  |                    ^^^       ^^^^^^ could not find `device` in `block`
+  |                    |
+  |                    could not find `bio` in `block`
+
+error[E0432]: unresolved imports `crate::syscall::SyscallTable`, `crate::syscall::sys_getpid`
+ --> src/sys_runtime.rs:6:22
+  |
+6 | use crate::syscall::{SyscallTable, sys_getpid};
+  |                      ^^^^^^^^^^^^  ^^^^^^^^^^ no `sys_getpid` in `syscall`
+  |                      |
+  |                      no `SyscallTable` in `syscall`
+  |
+help: a similar name exists in the module
+  |
+6 - use crate::syscall::{SyscallTable, sys_getpid};
+6 + use crate::syscall::{SyscallHandler, sys_getpid};
+  |
+help: a similar name exists in the module
+  |
+6 - use crate::syscall::{SyscallTable, sys_getpid};
+6 + use crate::syscall::{SyscallTable, SYS_GETPID};
+  |
+
+error[E0432]: unresolved import `super::checkpoint::VmCheckpoint`
+ --> src/virt/manager.rs:2:5
+  |
+2 | use super::checkpoint::VmCheckpoint;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `VmCheckpoint` in `virt::checkpoint`
+
+error[E0432]: unresolved import `crate::drivers::fault`
+ --> src/sys_runtime_fault.rs:1:21
+  |
+1 | use crate::drivers::fault::DriverFault;
+  |                     ^^^^^ could not find `fault` in `drivers`
+
+error[E0432]: unresolved import `crate::drivers::recovery`
+ --> src/sys_runtime_fault.rs:2:21
+  |
+2 | use crate::drivers::recovery::recover_from_fault;
+  |                     ^^^^^^^^ could not find `recovery` in `drivers`
+
+error[E0432]: unresolved import `crate::syscall::fault`
+ --> src/sys_runtime_fault.rs:4:21
+  |
+4 | use crate::syscall::fault::{SyscallFault, syscall_precheck};
+  |                     ^^^^^ could not find `fault` in `syscall`
+
+error[E0432]: unresolved import `crate::boot::self_check`
+ --> src/self_check.rs:2:18
+  |
+2 | use crate::boot::self_check::run_boot_self_check;
+  |                  ^^^^^^^^^^ could not find `self_check` in `boot`
+
+error[E0432]: unresolved import `crate::sched::manager::SchedClass`
+ --> src/self_check.rs:5:29
+  |
+5 | use crate::sched::manager::{SchedClass, SchedulerManager};
+  |                             ^^^^^^^^^^ no `SchedClass` in `sched::manager`
+
+error[E0432]: unresolved import `crate::security::bundle`
+ --> src/self_check.rs:6:22
+  |
+6 | use crate::security::bundle::run_security_bundle;
+  |                      ^^^^^^ could not find `bundle` in `security`
+
+error[E0432]: unresolved import `crate::drivers::lifecycle`
+ --> src/system_deep_check.rs:1:21
+  |
+1 | use crate::drivers::lifecycle::{DriverLifecycle, DriverState};
+  |                     ^^^^^^^^^ could not find `lifecycle` in `drivers`
+
+error[E0432]: unresolved imports `crate::mm::fault::FaultAction`, `crate::mm::fault::PageFault`, `crate::mm::fault::handle_fault`
+ --> src/system_deep_check.rs:3:24
+  |
+3 | use crate::mm::fault::{FaultAction, PageFault, handle_fault};
+  |                        ^^^^^^^^^^^  ^^^^^^^^^  ^^^^^^^^^^^^ no `handle_fault` in `mm::fault`
+  |                        |            |
+  |                        |            no `PageFault` in `mm::fault`
+  |                        no `FaultAction` in `mm::fault`
+
+error[E0433]: cannot find `lazy` in `lazy_static`
+   --> src/time/timer.rs:408:22
+    |
+408 | ...   lazy_static::lazy!(Clocksource::new("global_tsc", ClockSourceType...
+    |                    ^^^^ could not find `lazy` in `lazy_static`
+
+warning: unused import: `std::collections::HashMap`
+ --> src/boot/mod.rs:4:5
+  |
+4 | use std::collections::HashMap;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^
+  |
+  = note: `#[warn(unused_imports)]` (part of `#[warn(unused)]`) on by default
+
+warning: variant `ACPI_NVS` should have an upper camel case name
+  --> src/boot/mod.rs:92:5
+   |
+92 |     ACPI_NVS,
+   |     ^^^^^^^^ help: convert the identifier to upper camel case: `AcpiNvs`
+   |
+   = note: `#[warn(non_camel_case_types)]` (part of `#[warn(nonstandard_style)]`) on by default
+
+warning: unused import: `std::sync::Arc`
+ --> src/drivers/mod.rs:7:5
+  |
+7 | use std::sync::Arc;
+  |     ^^^^^^^^^^^^^^
+
+warning: unused import: `AtomicU64`
+ --> src/ipc/mod.rs:5:36
+  |
+5 | use std::sync::atomic::{AtomicU32, AtomicU64, AtomicBool, Ordering};
+  |                                    ^^^^^^^^^
+
+warning: variant `SEM_ALLOC` should have an upper camel case name
+   --> src/ipc/mod.rs:143:5
+    |
+143 |     SEM_ALLOC,
+    |     ^^^^^^^^^ help: convert the identifier to upper camel case: `SemAlloc`
+
+warning: variant `SEM_ANON` should have an upper camel case name
+   --> src/ipc/mod.rs:144:5
+    |
+144 |     SEM_ANON,
+    |     ^^^^^^^^ help: convert the identifier to upper camel case: `SemAnon`
+
+warning: type `pid_t` should have an upper camel case name
+   --> src/ipc/mod.rs:477:6
+    |
+477 | type pid_t = i32;
+    |      ^^^^^ help: convert the identifier to upper camel case: `PidT`
+
+warning: type `key_t` should have an upper camel case name
+   --> src/ipc/mod.rs:478:6
+    |
+478 | type key_t = i32;
+    |      ^^^^^ help: convert the identifier to upper camel case: `KeyT`
+
+warning: unused import: `Ordering`
+ --> src/mm/hugepage/types.rs:3:50
+  |
+3 | use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+  |                                                  ^^^^^^^^
+
+warning: unused import: `PhysicalMemoryManager`
+ --> src/mm/swap.rs:6:28
+  |
+6 | use crate::mm::{PageFrame, PhysicalMemoryManager};
+  |                            ^^^^^^^^^^^^^^^^^^^^^
+
+warning: unused imports: `Ipv4Addr` and `Ipv6Addr`
+ --> src/net/udp/types.rs:3:16
+  |
+3 | use std::net::{Ipv4Addr, Ipv6Addr};
+  |                ^^^^^^^^  ^^^^^^^^
+
+warning: unused imports: `AtomicBool` and `Ordering`
+ --> src/net/udp/types.rs:4:25
+  |
+4 | use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+  |                         ^^^^^^^^^^               ^^^^^^^^
+
+warning: unused import: `Ordering`
+ --> src/pci/types.rs:2:50
+  |
+2 | use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+  |                                                  ^^^^^^^^
+
+warning: unused import: `AtomicBool`
+ --> src/power/mod.rs:4:25
+  |
+4 | use std::sync::atomic::{AtomicBool, AtomicU32, Ordering};
+  |                         ^^^^^^^^^^
+
+warning: unused import: `RtTask`
+ --> src/sched/manager.rs:6:30
+  |
+6 | use super::rt::{RtScheduler, RtTask};
+  |                              ^^^^^^
+
+warning: unused imports: `DeadlineRunQueue`, `DlParams`, and `DlTask`
+ --> src/sched/manager.rs:7:23
+  |
+7 | use super::deadline::{DlParams, DlTask, DeadlineRunQueue, DlScheduler};
+  |                       ^^^^^^^^  ^^^^^^  ^^^^^^^^^^^^^^^^
+
+warning: unused imports: `BTreeMap` and `VecDeque`
+ --> src/sched/manager.rs:9:24
+  |
+9 | use std::collections::{VecDeque, BTreeMap};
+  |                        ^^^^^^^^  ^^^^^^^^
+
+warning: unused import: `Ordering`
+ --> src/security/lsm/types.rs:3:50
+  |
+3 | use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+  |                                                  ^^^^^^^^
+
+warning: unused import: `Ordering`
+ --> src/security/selinux/types.rs:3:50
+  |
+3 | use std::sync::atomic::{AtomicBool, AtomicUsize, Ordering};
+  |                                                  ^^^^^^^^
+
+warning: unused import: `AtomicU64`
+ --> src/syscall/mod.rs:5:37
+  |
+5 | use std::sync::atomic::{AtomicBool, AtomicU64, Ordering};
+  |                                     ^^^^^^^^^
+
+warning: unused import: `AtomicU32`
+ --> src/time/timer.rs:4:48
+  |
+4 | use std::sync::atomic::{AtomicBool, AtomicU64, AtomicU32, Ordering};
+  |                                                ^^^^^^^^^
+
+warning: variant `ACPI_PM` should have an upper camel case name
+  --> src/time/timer.rs:15:5
+   |
+15 |     ACPI_PM,        // ACPI Power Management Timer
+   |     ^^^^^^^ help: convert the identifier to upper camel case: `AcpiPm`
+
+error[E0204]: the trait `Copy` cannot be implemented for this type
+   --> src/ipc/mod.rs:370:10
+    |
+369 | #[derive(Debug, Clone, Copy)]
+    |                        ---- in this derive macro expansion
+370 | pub enum SignalHandler {
+    |          ^^^^^^^^^^^^^
+...
+374 |     Action(Box<dyn Fn(SignalNumber) + Send>),
+    |            -------------------------------- this field does not implement `Copy`
+
+error[E0782]: expected a type, found a trait
+  --> src/mm/fault.rs:71:50
+   |
+71 | ...lloc_fn: &mut FnMut(u64) -> Result<PageFrame, MmError>) -> Result<(),...
+   |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+   |
+help: use a new generic type parameter, constrained by `FnMut(u64) -> Result<PageFrame, MmError>`
+   |
+71 -     pub fn make_unique(&mut self, alloc_fn: &mut FnMut(u64) -> Result<PageFrame, MmError>) -> Result<(), MmError> {
+71 +     pub fn make_unique<T: FnMut(u64) -> Result<PageFrame, MmError>>(&mut self, alloc_fn: &mut T) -> Result<(), MmError> {
+   |
+help: you can also use an opaque type, but users won't be able to specify the type parameter when calling the `fn`, having to rely exclusively on type inference
+   |
+71 |     pub fn make_unique(&mut self, alloc_fn: &mut impl FnMut(u64) -> Result<PageFrame, MmError>) -> Result<(), MmError> {
+   |                                                  ++++
+help: alternatively, use a trait object to accept any type that implements `FnMut(u64) -> Result<PageFrame, MmError>`, accessing its methods at runtime using dynamic dispatch
+   |
+71 |     pub fn make_unique(&mut self, alloc_fn: &mut dyn FnMut(u64) -> Result<PageFrame, MmError>) -> Result<(), MmError> {
+   |                                                  +++
+
+error[E0308]: mismatched types
+   --> src/crypto/mod.rs:191:41
+    |
+191 |             HashAlgorithm::SHA256 => Ok(hash_value[0..32].to_vec()),
+    |                                      -- ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Vec<u8>`, found `Vec<u64>`
+    |                                      |
+    |                                      arguments to this enum variant are incorrect
+    |
+    = note: expected struct `Vec<u8>`
+               found struct `Vec<u64>`
+help: the type constructed contains `Vec<u64>` due to the type of the argument passed
+   --> src/crypto/mod.rs:191:38
+    |
+191 |             HashAlgorithm::SHA256 => Ok(hash_value[0..32].to_vec()),
+    |                                      ^^^--------------------------^
+    |                                         |
+    |                                         this argument influences the type of `Ok`
+note: tuple variant defined here
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/result.rs:561:4
+
+error[E0308]: mismatched types
+   --> src/crypto/mod.rs:192:38
+    |
+192 |             HashAlgorithm::MD5 => Ok(hash_value[0..16].to_vec()),
+    |                                   -- ^^^^^^^^^^^^^^^^^^^^^^^^^^ expected `Vec<u8>`, found `Vec<u64>`
+    |                                   |
+    |                                   arguments to this enum variant are incorrect
+    |
+    = note: expected struct `Vec<u8>`
+               found struct `Vec<u64>`
+help: the type constructed contains `Vec<u64>` due to the type of the argument passed
+   --> src/crypto/mod.rs:192:35
+    |
+192 |             HashAlgorithm::MD5 => Ok(hash_value[0..16].to_vec()),
+    |                                   ^^^--------------------------^
+    |                                      |
+    |                                      this argument influences the type of `Ok`
+note: tuple variant defined here
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/result.rs:561:4
+
+error[E0308]: mismatched types
+   --> src/crypto/mod.rs:193:21
+    |
+193 |             _ => Ok(hash_value),
+    |                  -- ^^^^^^^^^^ expected `Vec<u8>`, found `[u64; 8]`
+    |                  |
+    |                  arguments to this enum variant are incorrect
+    |
+    = note: expected struct `Vec<u8>`
+                found array `[u64; 8]`
+help: the type constructed contains `[u64; 8]` due to the type of the argument passed
+   --> src/crypto/mod.rs:193:18
+    |
+193 |             _ => Ok(hash_value),
+    |                  ^^^----------^
+    |                     |
+    |                     this argument influences the type of `Ok`
+note: tuple variant defined here
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/result.rs:561:4
+
+error[E0277]: the trait bound `Atomic<u32>: Clone` is not satisfied
+   --> src/crypto/mod.rs:346:5
+    |
+341 | #[derive(Debug, Clone)]
+    |                 ----- in this derive macro expansion
+...
+346 |     pub usage_count: AtomicU32,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `Atomic<u32>`
+
+error[E0277]: `(dyn AnyDriver + 'static)` doesn't implement `Debug`
+  --> src/drivers/mod.rs:63:5
+   |
+61 | #[derive(Debug)]
+   |          ----- in this derive macro expansion
+62 | pub struct DriverManager {
+63 |     pub drivers: HashMap<String, Box<dyn AnyDriver>>,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Debug` is not implemented for `(dyn AnyDriver + 'static)`
+   |
+help: the following other types implement trait `Debug`
+  --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/any.rs:152:0
+   |
+   = note: `dyn std::any::Any`
+  ::: /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/any.rs:162:0
+   |
+   = note: `dyn std::any::Any + Send`
+  ::: /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/any.rs:169:0
+   |
+   = note: `dyn std::any::Any + Send + Sync`
+
+error[E0277]: `(dyn Fn(HotplugEvent) + Send + Sync + 'static)` doesn't implement `Debug`
+   --> src/drivers/mod.rs:190:5
+    |
+188 | #[derive(Debug)]
+    |          ----- in this derive macro expansion
+189 | pub struct HotplugManager {
+190 |     callbacks: Vec<HotplugCallback>,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+    = help: the trait `Debug` is not implemented for `(dyn Fn(HotplugEvent) + Send + Sync + 'static)`
+
+error[E0308]: mismatched types
+   --> src/ipc/mod.rs:256:20
+    |
+256 |             semid: id as i32,
+    |                    ^^^^^^^^^ expected `u32`, found `i32`
+
+error[E0277]: `(dyn Fn(SignalNumber) + Send + 'static)` doesn't implement `Debug`
+   --> src/ipc/mod.rs:374:12
+    |
+369 | #[derive(Debug, Clone, Copy)]
+    |          ----- in this derive macro expansion
+...
+374 |     Action(Box<dyn Fn(SignalNumber) + Send>),
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+    = help: the trait `Debug` is not implemented for `(dyn Fn(SignalNumber) + Send + 'static)`
+
+error[E0277]: the trait bound `dyn Fn(SignalNumber) + Send: Clone` is not satisfied
+   --> src/ipc/mod.rs:374:12
+    |
+369 | #[derive(Debug, Clone, Copy)]
+    |                 ----- in this derive macro expansion
+...
+374 |     Action(Box<dyn Fn(SignalNumber) + Send>),
+    |            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `dyn Fn(SignalNumber) + Send`
+    |
+    = note: required for `Box<dyn Fn(SignalNumber) + Send>` to implement `Clone`
+note: required by a bound in `std::clone::AssertParamIsClone`
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/clone.rs:357:0
+
+error[E0277]: the `?` operator can only be used on `Result`s, not `Option`s, in a method that returns `Result`
+  --> src/kernel/manager.rs:39:50
+   |
+36 |     pub fn tick(&mut self) -> Result<u32, KernelError> {
+   |     -------------------------------------------------- this function returns a `Result`
+...
+39 |         let task = self.scheduler.schedule_next()?;
+   |                                                  ^ use `.ok_or(...)?` to provide an error compatible with `Result<u32, KernelError>`
+
+error[E0277]: the `?` operator can only be applied to values that implement `Try`
+  --> src/kernel/manager.rs:47:9
+   |
+47 |         self.scheduler.stop(pid)?;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^ the `?` operator cannot be applied to type `bool`
+   |
+   = help: the nightly-only, unstable trait `Try` is not implemented for `bool`
+
+error[E0599]: no method named `denial_rate` found for struct `SecurityStats` in the current scope
+  --> src/kernel/stats.rs:71:23
+   |
+71 |         self.security.denial_rate()
+   |                       ^^^^^^^^^^^ method not found in `SecurityStats`
+   |
+  ::: src/security/mod.rs:20:1
+   |
+20 | pub struct SecurityStats {
+   | ------------------------ method `denial_rate` not found for this struct
+
+error[E0599]: no method named `throughput_bytes` found for struct `BlockStats` in the current scope
+  --> src/kernel/stats.rs:81:20
+   |
+81 |         self.block.throughput_bytes() + self.io_uring.completions as u64
+   |                    ^^^^^^^^^^^^^^^^ method not found in `BlockStats`
+   |
+  ::: src/block/mod.rs:4:1
+   |
+ 4 | pub struct BlockStats {
+   | --------------------- method `throughput_bytes` not found for this struct
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+  --> src/mm/phys.rs:41:33
+   |
+41 |             return Err(MmError::InvalidParameter);
+   |                                 ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+   |
+  ::: src/mm/error.rs:2:1
+   |
+ 2 | pub enum MmError {
+   | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+  --> src/mm/phys.rs:54:29
+   |
+54 |             .ok_or(MmError::NoMemory)?;
+   |                             ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+   |
+  ::: src/mm/error.rs:2:1
+   |
+ 2 | pub enum MmError {
+   | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+  --> src/mm/phys.rs:62:33
+   |
+62 |             return Err(MmError::InvalidAddress);
+   |                                 ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+   |
+  ::: src/mm/error.rs:2:1
+   |
+ 2 | pub enum MmError {
+   | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/vm.rs:143:33
+    |
+143 |             return Err(MmError::InvalidParameter);
+    |                                 ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> src/mm/vm.rs:149:23
+    |
+149 |             vm_flags: VmaFlags::with_read().with_write(),
+    |                       ^^^^^^^^^^^^^^^^^^^-- argument #1 of type `VmaFlags` is missing
+    |
+note: method defined here
+   --> src/mm/vm.rs:40:12
+    |
+ 40 |     pub fn with_read(mut self) -> Self {
+    |            ^^^^^^^^^ --------
+help: provide the argument
+    |
+149 |             vm_flags: VmaFlags::with_read(/* VmaFlags */).with_write(),
+    |                                           ++++++++++++++
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/vm.rs:173:33
+    |
+173 |             return Err(MmError::InvalidAddress);
+    |                                 ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/vm.rs:191:26
+    |
+191 |             Err(MmError::InvalidAddress)
+    |                          ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/vm.rs:255:33
+    |
+255 |             return Err(MmError::InvalidParameter);
+    |                                 ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/vm.rs:261:37
+    |
+261 |                 return Err(MmError::InvalidParameter);
+    |                                     ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0308]: mismatched types
+   --> src/mm/vm.rs:275:42
+    |
+275 |             current.prev = Some(Box::new(prev_vma));
+    |                                 -------- ^^^^^^^^ expected `Vma`, found `Box<Vma>`
+    |                                 |
+    |                                 arguments to this function are incorrect
+    |
+    = note: expected struct `Vma`
+               found struct `Box<Vma>`
+note: associated function defined here
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/alloc/src/boxed.rs:284:11
+help: consider unboxing the value
+    |
+275 |             current.prev = Some(Box::new(*prev_vma));
+    |                                          +
+
+error[E0599]: no variant, associated function, or constant named `NoSuchProcess` found for enum `MmError` in the current scope
+   --> src/mm/vm.rs:302:22
+    |
+302 |         Err(MmError::NoSuchProcess)
+    |                      ^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoSuchProcess` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/vm.rs:359:60
+    |
+359 | ...mut().ok_or(MmError::InvalidAddress)?;
+    |                         ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/vm.rs:362:55
+    |
+362 |         let next = current.next.take().ok_or(MmError::InvalidAddress)?;
+    |                                                       ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0277]: the trait bound `Atomic<u32>: Clone` is not satisfied
+  --> src/mm/swap.rs:15:5
+   |
+11 | #[derive(Debug, Clone)]
+   |                 ----- in this derive macro expansion
+...
+15 |     pub used_pages: AtomicU32,       // Использовано страниц
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `Atomic<u32>`
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+  --> src/mm/swap.rs:43:33
+   |
+43 |             return Err(MmError::NoMemory);
+   |                                 ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+   |
+  ::: src/mm/error.rs:2:1
+   |
+ 2 | pub enum MmError {
+   | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+  --> src/mm/swap.rs:55:33
+   |
+55 |             return Err(MmError::InvalidAddress);
+   |                                 ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+   |
+  ::: src/mm/error.rs:2:1
+   |
+ 2 | pub enum MmError {
+   | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/swap.rs:173:33
+    |
+173 |             return Err(MmError::NoMemory);
+    |                                 ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/swap.rs:177:33
+    |
+177 |             return Err(MmError::InvalidParameter);
+    |                                 ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/swap.rs:202:29
+    |
+202 |             .ok_or(MmError::NoMemory)?;
+    |                             ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoSuchProcess` found for enum `MmError` in the current scope
+   --> src/mm/swap.rs:234:29
+    |
+234 |             .ok_or(MmError::NoSuchProcess)?;
+    |                             ^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoSuchProcess` not found for this enum
+
+error[E0308]: mismatched types
+   --> src/mm/swap.rs:240:60
+    |
+240 | ...cache.get_mut(&page.index as u64) {
+    |          ------- ^^^^^^^^^^^^^^^^^^ expected `&u64`, found `u64`
+    |          |
+    |          arguments to this method are incorrect
+    |
+note: method defined here
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/std/src/collections/hash/map.rs:1292:11
+help: consider borrowing here
+    |
+240 |         if let Some(cache_entry) = self.swap_cache.get_mut(&(&page.index as u64)) {
+    |                                                            ++                  +
+
+error[E0606]: casting `&usize` as `u64` is invalid
+   --> src/mm/swap.rs:240:60
+    |
+240 | ... self.swap_cache.get_mut(&page.index as u64) {
+    |                             ^^^^^^^^^^^^^^^^^^
+    |
+help: remove the unneeded borrow
+    |
+240 -         if let Some(cache_entry) = self.swap_cache.get_mut(&page.index as u64) {
+240 +         if let Some(cache_entry) = self.swap_cache.get_mut(page.index as u64) {
+    |
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/swap.rs:274:22
+    |
+274 |         Err(MmError::InvalidAddress)
+    |                      ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0277]: the trait bound `Atomic<usize>: Clone` is not satisfied
+  --> src/mm/kmalloc.rs:21:5
+   |
+15 | #[derive(Debug, Clone)]
+   |                 ----- in this derive macro expansion
+...
+21 |     pub free_objects: AtomicUsize,   // Количество свободных объектов (а...
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `Atomic<usize>`
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:237:33
+    |
+237 |             return Err(MmError::InvalidParameter);
+    |                                 ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0308]: mismatched types
+   --> src/mm/kmalloc.rs:257:17
+    |
+257 | /                 self.class_slabs
+258 | |                     .values()
+259 | |                     .max_by_key(|c| c.object_size)
+260 | |                     .map(|cache| (cache.object_size, cache))
+    | |____________________________________________________________^ expected `Option<(&usize, &SlabClass)>`, found `Option<(usize, &SlabClass)>`
+    |
+    = note: expected enum `Option<(&_, &SlabClass)>`
+               found enum `Option<(_, &SlabClass)>`
+
+error[E0308]: mismatched types
+   --> src/mm/kmalloc.rs:252:9
+    |
+248 |       fn find_cache(&self, size: usize) -> Option<(usize, &SlabClass)> {
+    |                                            --------------------------- expected `Option<(usize, &SlabClass)>` because of return type
+...
+252 | /         self.class_slabs
+253 | |             .iter()
+254 | |             .find(|(_, cache)| cache.object_size >= aligned_size)
+255 | |             .or_else(|| {
+...   |
+260 | |                     .map(|cache| (cache.object_size, cache))
+261 | |             })
+    | |______________^ expected `Option<(usize, &SlabClass)>`, found `Option<(&usize, &SlabClass)>`
+    |
+    = note: expected enum `Option<(_, &SlabClass)>`
+               found enum `Option<(&_, &SlabClass)>`
+
+error[E0308]: mismatched types
+   --> src/mm/kmalloc.rs:272:17
+    |
+272 | /                 self.class_slabs
+273 | |                     .values_mut()
+274 | |                     .max_by_key(|c| c.object_size)
+275 | |                     .map(|cache| (cache.object_size, cache))
+    | |____________________________________________________________^ expected `Option<(&usize, &mut SlabClass)>`, found `Option<(usize, &mut SlabClass)>`
+    |
+    = note: expected enum `Option<(&_, &mut SlabClass)>`
+               found enum `Option<(_, &mut SlabClass)>`
+
+error[E0308]: mismatched types
+   --> src/mm/kmalloc.rs:268:9
+    |
+265 |       fn find_cache_mut(&mut self, size: usize) -> Option<(usize, &mut SlabClass)> {
+    |                                                    ------------------------------- expected `Option<(usize, &mut SlabClass)>` because of return type
+...
+268 | /         self.class_slabs
+269 | |             .iter_mut()
+270 | |             .find(|(_, cache)| cache.object_size >= aligned_size)
+271 | |             .or_else(|| {
+...   |
+275 | |                     .map(|cache| (cache.object_size, cache))
+276 | |             })
+    | |______________^ expected `Option<(usize, &mut SlabClass)>`, found `Option<(&usize, &mut SlabClass)>`
+    |
+    = note: expected enum `Option<(_, &mut SlabClass)>`
+               found enum `Option<(&_, &mut SlabClass)>`
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:282:29
+    |
+282 |             .ok_or(MmError::NoMemory)?;
+    |                             ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:286:29
+    |
+286 |             .ok_or(MmError::NoMemory)?;
+    |                             ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:304:65
+    |
+304 | ...first().ok_or(MmError::NoMemory)?;
+    |                           ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:357:33
+    |
+357 |                 .ok_or(MmError::NoMemory)?;
+    |                                 ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:359:33
+    |
+359 |                 .ok_or(MmError::NoMemory)?
+    |                                 ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:366:33
+    |
+366 |                 .ok_or(MmError::NoMemory)?
+    |                                 ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:376:33
+    |
+376 |             return Err(MmError::InvalidAddress);
+    |                                 ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:383:29
+    |
+383 |             .ok_or(MmError::InvalidParameter)?;
+    |                             ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:410:33
+    |
+410 |             return Err(MmError::InvalidAddress);
+    |                                 ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:493:29
+    |
+493 |         return Err(MmError::InvalidParameter);
+    |                             ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/kmalloc.rs:498:25
+    |
+498 |         .ok_or(MmError::NoMemory)?;
+    |                         ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:197:29
+    |
+197 |             .ok_or(MmError::InvalidAddress)?;
+    |                             ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:209:30
+    |
+209 |                 Err(MmError::InvalidAddress)
+    |                              ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:212:30
+    |
+212 |                 Err(MmError::InvalidParameter)
+    |                              ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:215:30
+    |
+215 |                 Err(MmError::NoMemory)
+    |                              ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:234:29
+    |
+234 |             .ok_or(MmError::NoMemory)?;
+    |                             ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoSuchProcess` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:269:29
+    |
+269 |             .ok_or(MmError::NoSuchProcess)?;
+    |                             ^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoSuchProcess` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:274:33
+    |
+274 |                 .ok_or(MmError::NoMemory)?;
+    |                                 ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:296:33
+    |
+296 |             return Err(MmError::InvalidParameter);
+    |                                 ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoSuchProcess` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:325:29
+    |
+325 |             .ok_or(MmError::NoSuchProcess)?;
+    |                             ^^^^^^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoSuchProcess` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `NoMemory` found for enum `MmError` in the current scope
+   --> src/mm/fault.rs:331:29
+    |
+331 |             .ok_or(MmError::NoMemory)?;
+    |                             ^^^^^^^^ variant, associated function, or constant not found in `MmError`
+    |
+   ::: src/mm/error.rs:2:1
+    |
+  2 | pub enum MmError {
+    | ---------------- variant, associated function, or constant `NoMemory` not found for this enum
+
+error[E0308]: mismatched types
+   --> src/mm/fault.rs:360:9
+    |
+345 | ...ub fn select_oom_victim(&self, processes: &[ProcessInfo]) -> Option<&ProcessInfo> {
+    |                                                                 -------------------- expected `Option<&ProcessInfo>` because of return type
+...
+360 | ...   victim
+    |       ^^^^^^ expected `Option<&ProcessInfo>`, found `Option<ProcessInfo>`
+    |
+    = note: expected enum `Option<&ProcessInfo>`
+               found enum `Option<ProcessInfo>`
+help: try using `.as_ref()` to convert `Option<ProcessInfo>` to `Option<&ProcessInfo>`
+    |
+360 |         victim.as_ref()
+    |               +++++++++
+
+error[E0599]: no method named `page_size` found for struct `PhysicalMemoryManager` in the current scope
+  --> src/mm/manager.rs:32:41
+   |
+32 |         let pa = page.index * self.phys.page_size();
+   |                                         ^^^^^^^^^-- help: remove the arguments
+   |                                         |
+   |                                         field, not a method
+   |
+  ::: src/mm/phys.rs:23:1
+   |
+23 | pub struct PhysicalMemoryManager {
+   | -------------------------------- method `page_size` not found for this struct
+
+error[E0609]: no field `open` on type `&mut Socket`
+  --> src/net/manager.rs:47:20
+   |
+47 |         if !socket.open {
+   |                    ^^^^ unknown field
+   |
+   = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `tx_packets` on type `&mut Socket`
+  --> src/net/manager.rs:56:16
+   |
+56 |         socket.tx_packets += 1;
+   |                ^^^^^^^^^^ unknown field
+   |
+   = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `open` on type `&mut Socket`
+  --> src/net/manager.rs:75:20
+   |
+75 |         if !socket.open {
+   |                    ^^^^ unknown field
+   |
+   = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `tx_packets` on type `&mut Socket`
+  --> src/net/manager.rs:84:16
+   |
+84 |         socket.tx_packets += 1;
+   |                ^^^^^^^^^^ unknown field
+   |
+   = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `open` on type `&mut Socket`
+  --> src/net/manager.rs:94:20
+   |
+94 |         if !socket.open {
+   |                    ^^^^ unknown field
+   |
+   = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `local_port` on type `&mut Socket`
+  --> src/net/manager.rs:97:16
+   |
+97 |         socket.local_port = Some(port);
+   |                ^^^^^^^^^^ unknown field
+   |
+   = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `local_port` on type `&mut Socket`
+   --> src/net/manager.rs:106:27
+    |
+106 |         let port = socket.local_port.ok_or(NetError::NotBound)?;
+    |                           ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `listening` on type `&mut Socket`
+   --> src/net/manager.rs:107:16
+    |
+107 |         socket.listening = true;
+    |                ^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `open` on type `&mut Socket`
+   --> src/net/manager.rs:117:20
+    |
+117 |         if !socket.open {
+    |                    ^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `peer_port` on type `&mut Socket`
+   --> src/net/manager.rs:120:16
+    |
+120 |         socket.peer_port = Some(remote_port);
+    |                ^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `local_port` on type `&Socket`
+   --> src/net/manager.rs:134:27
+    |
+134 |         let port = socket.local_port.ok_or(NetError::NotBound)?;
+    |                           ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `listening` on type `&Socket`
+   --> src/net/manager.rs:135:20
+    |
+135 |         if !socket.listening {
+    |                    ^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `local_port` on type `&mut Socket`
+   --> src/net/manager.rs:149:18
+    |
+149 |         accepted.local_port = Some(port);
+    |                  ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `peer_port` on type `&mut Socket`
+   --> src/net/manager.rs:150:18
+    |
+150 |         accepted.peer_port = Some(port);
+    |                  ^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `open` on type `&mut Socket`
+   --> src/net/manager.rs:169:20
+    |
+169 |         if !socket.open {
+    |                    ^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0609]: no field `rx_packets` on type `&mut Socket`
+   --> src/net/manager.rs:173:16
+    |
+173 |         socket.rx_packets += 1;
+    |                ^^^^^^^^^^ unknown field
+    |
+    = note: available fields are: `fd`, `local_addr`, `remote_addr`, `state`, `buffers`
+
+error[E0061]: this function takes 2 arguments but 0 arguments were supplied
+  --> src/net/socket.rs:31:9
+   |
+31 |         Self::new()
+   |         ^^^^^^^^^-- two arguments of type `i32` and `u16` are missing
+   |
+note: associated function defined here
+  --> src/net/socket.rs:36:12
+   |
+36 |     pub fn new(fd: i32, port: u16) -> Self {
+   |            ^^^ -------  ---------
+help: provide the arguments
+   |
+31 |         Self::new(/* i32 */, /* u16 */)
+   |                   ++++++++++++++++++++
+
+error[E0369]: binary operation `!=` cannot be applied to type `SocketState`
+  --> src/net/socket.rs:55:23
+   |
+55 | ...   if self.state != SocketState::Closed && self.state != SocketState:...
+   |          ---------- ^^ ------------------- SocketState
+   |          |
+   |          SocketState
+   |
+note: an implementation of `PartialEq` might be missing for `SocketState`
+  --> src/net/socket.rs:16:1
+   |
+16 | pub enum SocketState {
+   | ^^^^^^^^^^^^^^^^^^^^ must implement `PartialEq`
+help: consider annotating `SocketState` with `#[derive(PartialEq)]`
+   |
+16 + #[derive(PartialEq)]
+17 | pub enum SocketState {
+   |
+
+error[E0369]: binary operation `!=` cannot be applied to type `SocketState`
+  --> src/net/socket.rs:55:60
+   |
+55 | ...Closed && self.state != SocketState::Listening {
+   |              ---------- ^^ ---------------------- SocketState
+   |              |
+   |              SocketState
+   |
+note: an implementation of `PartialEq` might be missing for `SocketState`
+  --> src/net/socket.rs:16:1
+   |
+16 | pub enum SocketState {
+   | ^^^^^^^^^^^^^^^^^^^^ must implement `PartialEq`
+help: consider annotating `SocketState` with `#[derive(PartialEq)]`
+   |
+16 + #[derive(PartialEq)]
+17 | pub enum SocketState {
+   |
+
+error[E0369]: binary operation `!=` cannot be applied to type `SocketState`
+  --> src/net/socket.rs:70:23
+   |
+70 |         if self.state != SocketState::Established {
+   |            ---------- ^^ ------------------------ SocketState
+   |            |
+   |            SocketState
+   |
+note: an implementation of `PartialEq` might be missing for `SocketState`
+  --> src/net/socket.rs:16:1
+   |
+16 | pub enum SocketState {
+   | ^^^^^^^^^^^^^^^^^^^^ must implement `PartialEq`
+help: consider annotating `SocketState` with `#[derive(PartialEq)]`
+   |
+16 + #[derive(PartialEq)]
+17 | pub enum SocketState {
+   |
+
+error[E0369]: binary operation `!=` cannot be applied to type `SocketState`
+  --> src/net/socket.rs:78:23
+   |
+78 |         if self.state != SocketState::Established {
+   |            ---------- ^^ ------------------------ SocketState
+   |            |
+   |            SocketState
+   |
+note: an implementation of `PartialEq` might be missing for `SocketState`
+  --> src/net/socket.rs:16:1
+   |
+16 | pub enum SocketState {
+   | ^^^^^^^^^^^^^^^^^^^^ must implement `PartialEq`
+help: consider annotating `SocketState` with `#[derive(PartialEq)]`
+   |
+16 + #[derive(PartialEq)]
+17 | pub enum SocketState {
+   |
+
+error[E0061]: this function takes 2 arguments but 1 argument was supplied
+  --> src/net/socket_table.rs:15:33
+   |
+15 |         self.sockets.insert(id, Socket::new(id));
+   |                                 ^^^^^^^^^^^----
+   |                                            ||
+   |                                            |expected `i32`, found `u64`
+   |                                            argument #2 of type `u16` is missing
+   |
+note: associated function defined here
+  --> src/net/socket.rs:36:12
+   |
+36 |     pub fn new(fd: i32, port: u16) -> Self {
+   |            ^^^ -------  ---------
+help: you can convert a `u64` to an `i32` and panic if the converted value doesn't fit
+   |
+15 |         self.sockets.insert(id, Socket::new(id.try_into().unwrap()));
+   |                                               ++++++++++++++++++++
+help: provide the argument
+   |
+15 -         self.sockets.insert(id, Socket::new(id));
+15 +         self.sockets.insert(id, Socket::new(/* i32 */, /* u16 */));
+   |
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> src/net/tcp/mod.rs:136:22
+    |
+136 |         self.flags = TcpFlags::with_syn();
+    |                      ^^^^^^^^^^^^^^^^^^-- argument #1 of type `TcpFlags` is missing
+    |
+note: method defined here
+   --> src/net/tcp/mod.rs:64:12
+    |
+ 64 |     pub fn with_syn(mut self) -> Self {
+    |            ^^^^^^^^ --------
+help: provide the argument
+    |
+136 |         self.flags = TcpFlags::with_syn(/* TcpFlags */);
+    |                                         ++++++++++++++
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> src/net/tcp/mod.rs:143:22
+    |
+143 |         self.flags = TcpFlags::with_syn().with_ack();
+    |                      ^^^^^^^^^^^^^^^^^^-- argument #1 of type `TcpFlags` is missing
+    |
+note: method defined here
+   --> src/net/tcp/mod.rs:64:12
+    |
+ 64 |     pub fn with_syn(mut self) -> Self {
+    |            ^^^^^^^^ --------
+help: provide the argument
+    |
+143 |         self.flags = TcpFlags::with_syn(/* TcpFlags */).with_ack();
+    |                                         ++++++++++++++
+
+error[E0599]: no method named `with_psh` found for struct `TcpFlags` in the current scope
+   --> src/net/tcp/mod.rs:156:44
+    |
+ 44 | pub struct TcpFlags(u16);
+    | ------------------- method `with_psh` not found for this struct
+...
+156 |         self.flags = self.flags.with_ack().with_psh();
+    |                                            ^^^^^^^^
+    |
+help: there is a method `with_rst` with a similar name
+    |
+156 -         self.flags = self.flags.with_ack().with_psh();
+156 +         self.flags = self.flags.with_ack().with_rst();
+    |
+
+error[E0061]: this function takes 1 argument but 0 arguments were supplied
+   --> src/net/tcp/mod.rs:161:22
+    |
+161 |         self.flags = TcpFlags::with_rst();
+    |                      ^^^^^^^^^^^^^^^^^^-- argument #1 of type `TcpFlags` is missing
+    |
+note: method defined here
+   --> src/net/tcp/mod.rs:74:12
+    |
+ 74 |     pub fn with_rst(mut self) -> Self {
+    |            ^^^^^^^^ --------
+help: provide the argument
+    |
+161 |         self.flags = TcpFlags::with_rst(/* TcpFlags */);
+    |                                         ++++++++++++++
+
+error[E0599]: no variant, associated function, or constant named `InvalidState` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:256:34
+    |
+256 |             return Err(NetError::InvalidState);
+    |                                  ^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidState` not found for this enum
+    |
+help: there is a variant with a similar name
+    |
+256 -             return Err(NetError::InvalidState);
+256 +             return Err(NetError::InvalidMtu);
+    |
+
+error[E0599]: no variant, associated function, or constant named `InvalidState` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:270:34
+    |
+270 |             return Err(NetError::InvalidState);
+    |                                  ^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidState` not found for this enum
+    |
+help: there is a variant with a similar name
+    |
+270 -             return Err(NetError::InvalidState);
+270 +             return Err(NetError::InvalidMtu);
+    |
+
+error[E0599]: no variant, associated function, or constant named `InvalidParameter` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:367:34
+    |
+367 |             return Err(NetError::InvalidParameter);
+    |                                  ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidParameter` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:379:34
+    |
+379 |             return Err(NetError::InvalidAddress);
+    |                                  ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:391:34
+    |
+391 |             return Err(NetError::InvalidAddress);
+    |                                  ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidState` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:405:34
+    |
+405 |             return Err(NetError::InvalidState);
+    |                                  ^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidState` not found for this enum
+    |
+help: there is a variant with a similar name
+    |
+405 -             return Err(NetError::InvalidState);
+405 +             return Err(NetError::InvalidMtu);
+    |
+
+error[E0308]: mismatched types
+   --> src/net/tcp/mod.rs:410:23
+    |
+410 |             return Ok(accepted);
+    |                    -- ^^^^^^^^ expected `&mut TcpSocket`, found `TcpSocket`
+    |                    |
+    |                    arguments to this enum variant are incorrect
+    |
+help: the type constructed contains `TcpSocket` due to the type of the argument passed
+   --> src/net/tcp/mod.rs:410:20
+    |
+410 |             return Ok(accepted);
+    |                    ^^^--------^
+    |                       |
+    |                       this argument influences the type of `Ok`
+note: tuple variant defined here
+   --> /rustc/ac68faa20c58cbccd01ee7208bf3b6e93a7d7f96/library/core/src/result.rs:561:4
+help: consider mutably borrowing here
+    |
+410 |             return Ok(&mut accepted);
+    |                       ++++
+
+error[E0599]: no variant, associated function, or constant named `WouldBlock` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:413:23
+    |
+413 |         Err(NetError::WouldBlock) // No pending connections
+    |                       ^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `WouldBlock` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidState` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:419:34
+    |
+419 |             return Err(NetError::InvalidState);
+    |                                  ^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidState` not found for this enum
+    |
+help: there is a variant with a similar name
+    |
+419 -             return Err(NetError::InvalidState);
+419 +             return Err(NetError::InvalidMtu);
+    |
+
+error[E0599]: no variant, associated function, or constant named `NoSuchProcess` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:425:27
+    |
+425 |             Err(NetError::NoSuchProcess)
+    |                           ^^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `NoSuchProcess` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidState` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:434:27
+    |
+434 |             Err(NetError::InvalidState)
+    |                           ^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidState` not found for this enum
+    |
+help: there is a variant with a similar name
+    |
+434 -             Err(NetError::InvalidState)
+434 +             Err(NetError::InvalidMtu)
+    |
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:492:34
+    |
+492 |             return Err(NetError::InvalidAddress);
+    |                                  ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:499:36
+    |
+499 |             .map_err(|_| NetError::InvalidAddress)?
+    |                                    ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidPort` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:503:36
+    |
+503 |             .map_err(|_| NetError::InvalidPort)?
+    |                                    ^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidPort` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidAddress` found for enum `NetError` in the current scope
+   --> src/net/tcp/mod.rs:618:23
+    |
+618 |         Err(NetError::InvalidAddress)
+    |                       ^^^^^^^^^^^^^^ variant, associated function, or constant not found in `NetError`
+    |
+   ::: src/net/error.rs:2:1
+    |
+  2 | pub enum NetError {
+    | ----------------- variant, associated function, or constant `InvalidAddress` not found for this enum
+
+error[E0277]: the trait bound `Atomic<bool>: Clone` is not satisfied
+ --> src/pci/types.rs:9:5
+  |
+4 | #[derive(Debug, Clone)]
+  |                 ----- in this derive macro expansion
+...
+9 |     pub initialized: AtomicBool,
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `Atomic<bool>`
+
+error[E0277]: the trait bound `Atomic<usize>: Clone` is not satisfied
+  --> src/pci/types.rs:10:5
+   |
+ 4 | #[derive(Debug, Clone)]
+   |                 ----- in this derive macro expansion
+...
+10 |     pub refcount: AtomicUsize,
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^ the trait `Clone` is not implemented for `Atomic<usize>`
+
+error[E0599]: no variant, associated function, or constant named `InvalidDeadlineParams` found for enum `SchedError` in the current scope
+  --> src/sched/deadline.rs:32:36
+   |
+32 |             return Err(SchedError::InvalidDeadlineParams);
+   |                                    ^^^^^^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+   |
+  ::: src/sched/error.rs:2:1
+   |
+ 2 | pub enum SchedError {
+   | ------------------- variant, associated function, or constant `InvalidDeadlineParams` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidDeadlineParams` found for enum `SchedError` in the current scope
+  --> src/sched/deadline.rs:35:36
+   |
+35 |             return Err(SchedError::InvalidDeadlineParams);
+   |                                    ^^^^^^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+   |
+  ::: src/sched/error.rs:2:1
+   |
+ 2 | pub enum SchedError {
+   | ------------------- variant, associated function, or constant `InvalidDeadlineParams` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `InvalidDeadlineParams` found for enum `SchedError` in the current scope
+  --> src/sched/deadline.rs:38:36
+   |
+38 |             return Err(SchedError::InvalidDeadlineParams);
+   |                                    ^^^^^^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+   |
+  ::: src/sched/error.rs:2:1
+   |
+ 2 | pub enum SchedError {
+   | ------------------- variant, associated function, or constant `InvalidDeadlineParams` not found for this enum
+
+error[E0599]: no variant, associated function, or constant named `DeadlineExceeded` found for enum `SchedError` in the current scope
+   --> src/sched/deadline.rs:159:36
+    |
+159 |             return Err(SchedError::DeadlineExceeded);
+    |                                    ^^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+    |
+   ::: src/sched/error.rs:2:1
+    |
+  2 | pub enum SchedError {
+    | ------------------- variant, associated function, or constant `DeadlineExceeded` not found for this enum
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:281:14
+    |
+281 |         self.runtimes.push(DeadlineRunQueue::new(cpu_id));
+    |              ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:286:33
+    |
+286 | ...   if let Some(pos) = self.runtimes.iter().position(|r| r.cpu_id == ...
+    |                               ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:287:18
+    |
+287 |             self.runtimes.remove(pos);
+    |                  ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:293:32
+    |
+293 |         if let Some(rq) = self.runtimes.get_mut(cpu_id) {
+    |                                ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0599]: no variant, associated function, or constant named `InvalidCpuId` found for enum `SchedError` in the current scope
+   --> src/sched/deadline.rs:296:29
+    |
+296 |             Err(SchedError::InvalidCpuId)
+    |                             ^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+    |
+   ::: src/sched/error.rs:2:1
+    |
+  2 | pub enum SchedError {
+    | ------------------- variant, associated function, or constant `InvalidCpuId` not found for this enum
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:302:14
+    |
+302 |         self.runtimes.get_mut(cpu_id)?.pick_next_task().map(|t| t.clone())
+    |              ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:307:32
+    |
+307 |         if let Some(rq) = self.runtimes.get_mut(cpu_id) {
+    |                                ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0599]: no variant, associated function, or constant named `InvalidCpuId` found for enum `SchedError` in the current scope
+   --> src/sched/deadline.rs:310:29
+    |
+310 |             Err(SchedError::InvalidCpuId)
+    |                             ^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+    |
+   ::: src/sched/error.rs:2:1
+    |
+  2 | pub enum SchedError {
+    | ------------------- variant, associated function, or constant `InvalidCpuId` not found for this enum
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:318:32
+    |
+318 |         if let Some(rq) = self.runtimes.get_mut(cpu_id) {
+    |                                ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:333:26
+    |
+333 |                     self.runtimes[cpu_id].tasks.remove(&old_deadline);
+    |                          ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:334:26
+    |
+334 | ...   self.runtimes[cpu_id].tasks.insert(current.deadline_ptr, current....
+    |            ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&DlScheduler`
+   --> src/sched/deadline.rs:345:14
+    |
+345 |         self.runtimes.len()
+    |              ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&DlScheduler`
+   --> src/sched/deadline.rs:355:14
+    |
+355 |         self.runtimes.get(cpu_id)
+    |              ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:363:17
+    |
+363 |         if self.runtimes.len() < 2 {
+    |                 ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:372:31
+    |
+372 |         for (idx, rq) in self.runtimes.iter().enumerate() {
+    |                               ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:386:23
+    |
+386 | ...   (self.runtimes.get_mut(max_rq_idx), self.runtimes.get_mut(min_rq_...
+    |             ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut DlScheduler`
+   --> src/sched/deadline.rs:386:58
+    |
+386 | ..._mut(max_rq_idx), self.runtimes.get_mut(min_rq_idx))
+    |                           ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0599]: no variant, associated function, or constant named `InvalidPriority` found for enum `SchedError` in the current scope
+  --> src/sched/rt.rs:21:36
+   |
+21 |             return Err(SchedError::InvalidPriority);
+   |                                    ^^^^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+   |
+  ::: src/sched/error.rs:2:1
+   |
+ 2 | pub enum SchedError {
+   | ------------------- variant, associated function, or constant `InvalidPriority` not found for this enum
+
+error[E0277]: the trait bound `[Option<VecDeque<RtTask>>; 100]: Default` is not satisfied
+  --> src/sched/rt.rs:81:30
+   |
+81 |             priority_queues: Default::default(),
+   |                              ^^^^^^^^^^^^^^^^^^ the trait `Default` is not implemented for `[Option<VecDeque<RtTask>>; 100]`
+   |
+   = help: the following other types implement trait `Default`:
+             &[T]
+             &mut [T]
+             [T; 0]
+             [T; 1]
+             [T; 2]
+             [T; 3]
+             [T; 4]
+             [T; 5]
+           and 27 others
+
+error[E0609]: no field `runtimes` on type `&mut RtScheduler`
+   --> src/sched/rt.rs:313:14
+    |
+313 |         self.runtimes.push(RtRunQueue::new(cpu_id));
+    |              ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut RtScheduler`
+   --> src/sched/rt.rs:318:33
+    |
+318 | ...   if let Some(pos) = self.runtimes.iter().position(|r| r.cpu_id == ...
+    |                               ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut RtScheduler`
+   --> src/sched/rt.rs:319:18
+    |
+319 |             self.runtimes.remove(pos);
+    |                  ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut RtScheduler`
+   --> src/sched/rt.rs:325:32
+    |
+325 |         if let Some(rq) = self.runtimes.get_mut(cpu_id) {
+    |                                ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0599]: no variant, associated function, or constant named `InvalidCpuId` found for enum `SchedError` in the current scope
+   --> src/sched/rt.rs:328:29
+    |
+328 |             Err(SchedError::InvalidCpuId)
+    |                             ^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+    |
+   ::: src/sched/error.rs:2:1
+    |
+  2 | pub enum SchedError {
+    | ------------------- variant, associated function, or constant `InvalidCpuId` not found for this enum
+
+error[E0609]: no field `runtimes` on type `&mut RtScheduler`
+   --> src/sched/rt.rs:334:14
+    |
+334 |         self.runtimes.get_mut(cpu_id)?.pick_next_task().map(|t| t.clone())
+    |              ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&mut RtScheduler`
+   --> src/sched/rt.rs:339:32
+    |
+339 |         if let Some(rq) = self.runtimes.get_mut(cpu_id) {
+    |                                ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0599]: no variant, associated function, or constant named `InvalidCpuId` found for enum `SchedError` in the current scope
+   --> src/sched/rt.rs:342:29
+    |
+342 |             Err(SchedError::InvalidCpuId)
+    |                             ^^^^^^^^^^^^ variant, associated function, or constant not found in `SchedError`
+    |
+   ::: src/sched/error.rs:2:1
+    |
+  2 | pub enum SchedError {
+    | ------------------- variant, associated function, or constant `InvalidCpuId` not found for this enum
+
+error[E0609]: no field `runtimes` on type `&mut RtScheduler`
+   --> src/sched/rt.rs:350:32
+    |
+350 |         if let Some(rq) = self.runtimes.get_mut(cpu_id) {
+    |                                ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&RtScheduler`
+   --> src/sched/rt.rs:368:14
+    |
+368 |         self.runtimes.len()
+    |              ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0609]: no field `runtimes` on type `&RtScheduler`
+   --> src/sched/rt.rs:378:14
+    |
+378 |         self.runtimes.get(cpu_id)
+    |              ^^^^^^^^ unknown field
+    |
+    = note: available fields are: `runqueues`, `global_stats`, `enabled`
+
+error[E0599]: no method named `set_cpu_count` found for struct `SchedulerManager` in the current scope
+   --> src/sched/system.rs:37:19
+    |
+ 37 |                 m.set_cpu_count(cpus);
+    |                   ^^^^^^^^^^^^^
+    |
+   ::: src/sched/manager.rs:20:1
+    |
+ 20 | pub struct SchedulerManager {
+    | --------------------------- method `set_cpu_count` not found for this struct
+    |
+help: there is a method `cpu_count` with a similar name, but with different arguments
+   --> src/sched/manager.rs:137:5
+    |
+137 |     pub fn cpu_count(&self) -> usize {
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0560]: struct `RtStats` has no field named `budget`
+  --> src/sched/system.rs:41:27
+   |
+41 |             rt: RtStats { budget: 10 },
+   |                           ^^^^^^ `RtStats` does not have this field
+   |
+   = note: available fields are: `nr_schedule_cycles`, `nr_switches`, `nr_preemptions`, `nr_context_switches`, `highprio_tasks_run`
+
+error[E0599]: no method named `enqueue_with` found for struct `SchedulerManager` in the current scope
+  --> src/sched/system.rs:50:18
+   |
+50 |         self.mgr.enqueue_with(pid, SchedClass::Cfs, 120, cpu);
+   |                  ^^^^^^^^^^^^
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `enqueue_with` not found for this struct
+   |
+help: there is a method `enqueue_task` with a similar name, but with different arguments
+  --> src/sched/manager.rs:64:5
+   |
+64 |     pub fn enqueue_task(&mut self, task: &mut Task) {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `enqueue_with` found for struct `SchedulerManager` in the current scope
+  --> src/sched/system.rs:54:18
+   |
+54 |         self.mgr.enqueue_with(pid, SchedClass::Rt, 10, cpu);
+   |                  ^^^^^^^^^^^^
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `enqueue_with` not found for this struct
+   |
+help: there is a method `enqueue_task` with a similar name, but with different arguments
+  --> src/sched/manager.rs:64:5
+   |
+64 |     pub fn enqueue_task(&mut self, task: &mut Task) {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `pick_next_on_cpu` found for struct `SchedulerManager` in the current scope
+  --> src/sched/system.rs:60:28
+   |
+60 |         let pid = self.mgr.pick_next_on_cpu(cpu).expect("scheduler empty");
+   |                            ^^^^^^^^^^^^^^^^ method not found in `SchedulerManager`
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `pick_next_on_cpu` not found for this struct
+
+error[E0599]: no method named `consume` found for struct `RtStats` in the current scope
+   --> src/sched/system.rs:65:21
+    |
+ 65 |             self.rt.consume();
+    |                     ^^^^^^^ method not found in `RtStats`
+    |
+   ::: src/sched/rt.rs:255:1
+    |
+255 | pub struct RtStats {
+    | ------------------ method `consume` not found for this struct
+    |
+    = help: items from traits can only be used if the trait is implemented and in scope
+    = note: the following trait defines an item `consume`, perhaps you need to implement it:
+            candidate #1: `BufRead`
+
+error[E0599]: no method named `tick` found for struct `CfsStats` in the current scope
+  --> src/sched/system.rs:67:22
+   |
+67 |             self.cfs.tick();
+   |                      ^^^^ method not found in `CfsStats`
+   |
+  ::: src/sched/cfs.rs:4:1
+   |
+ 4 | pub struct CfsStats {
+   | ------------------- method `tick` not found for this struct
+
+error[E0599]: no method named `len` found for struct `SchedulerManager` in the current scope
+  --> src/sched/system.rs:71:35
+   |
+71 |         self.load.update(self.mgr.len() as f32 / denom);
+   |                                   ^^^ method not found in `SchedulerManager`
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `len` not found for this struct
+   |
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following trait defines an item `len`, perhaps you need to implement it:
+           candidate #1: `ExactSizeIterator`
+help: some of the expressions' fields have a method of the same name
+   |
+71 |         self.load.update(self.mgr.dl_scheduler.runqueues.len() as f32 / denom);
+   |                                   +++++++++++++++++++++++
+71 |         self.load.update(self.mgr.rt_scheduler.runqueues.len() as f32 / denom);
+   |                                   +++++++++++++++++++++++
+
+error[E0599]: no method named `set_affinity` found for struct `SchedulerManager` in the current scope
+  --> src/sched/system.rs:77:26
+   |
+77 |         let _ = self.mgr.set_affinity(pid, cpu);
+   |                          ^^^^^^^^^^^^ method not found in `SchedulerManager`
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `set_affinity` not found for this struct
+
+error[E0599]: no method named `rebalance` found for struct `SchedulerManager` in the current scope
+  --> src/sched/system.rs:81:18
+   |
+81 |         self.mgr.rebalance()
+   |                  ^^^^^^^^^ method not found in `SchedulerManager`
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `rebalance` not found for this struct
+
+error[E0599]: no method named `len` found for struct `SchedulerManager` in the current scope
+  --> src/sched/system.rs:87:32
+   |
+87 |             runq_len: self.mgr.len(),
+   |                                ^^^ method not found in `SchedulerManager`
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `len` not found for this struct
+   |
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following trait defines an item `len`, perhaps you need to implement it:
+           candidate #1: `ExactSizeIterator`
+help: some of the expressions' fields have a method of the same name
+   |
+87 |             runq_len: self.mgr.dl_scheduler.runqueues.len(),
+   |                                +++++++++++++++++++++++
+87 |             runq_len: self.mgr.rt_scheduler.runqueues.len(),
+   |                                +++++++++++++++++++++++
+
+error[E0609]: no field `vruntime` on type `CfsStats`
+  --> src/sched/system.rs:88:36
+   |
+88 |             cfs_vruntime: self.cfs.vruntime,
+   |                                    ^^^^^^^^ unknown field
+   |
+   = note: available fields are: `runnable_weight`, `weighted_exec_time`
+
+error[E0609]: no field `budget` on type `RtStats`
+  --> src/sched/system.rs:89:32
+   |
+89 |             rt_budget: self.rt.budget,
+   |                                ^^^^^^ unknown field
+   |
+   = note: available fields are: `nr_schedule_cycles`, `nr_switches`, `nr_preemptions`, `nr_context_switches`, `highprio_tasks_run`
+
+error[E0609]: no field `runing` on type `Clocksource`
+   --> src/time/timer.rs:120:8
+    |
+120 |     cs.runing.store(true, Ordering::Relaxed);
+    |        ^^^^^^ unknown field
+    |
+help: a field with a similar name exists
+    |
+120 |     cs.running.store(true, Ordering::Relaxed);
+    |           +
+
+error[E0277]: `(dyn Fn() -> TimerResult + Send + 'static)` doesn't implement `Debug`
+   --> src/time/timer.rs:222:5
+    |
+219 | #[derive(Debug)]
+    |          ----- in this derive macro expansion
+...
+222 |     pub callback: TimerCallback,
+    |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ unsatisfied trait bound
+    |
+    = help: the trait `Debug` is not implemented for `(dyn Fn() -> TimerResult + Send + 'static)`
+
+error[E0599]: no associated function or constant named `new` found for struct `time::TimeSystem` in the current scope
+  --> src/system.rs:59:31
+   |
+59 |             time: TimeSystem::new(),
+   |                               ^^^ associated function or constant not found in `time::TimeSystem`
+   |
+  ::: src/time/mod.rs:38:1
+   |
+38 | pub struct TimeSystem {
+   | --------------------- associated function or constant `new` not found for this struct
+   |
+   = help: items from traits can only be used if the trait is implemented and in scope
+   = note: the following trait defines an item `new`, perhaps you need to implement it:
+           candidate #1: `parking_lot_core::thread_parker::ThreadParkerT`
+
+error[E0599]: no method named `bootstrap` found for struct `time::TimeSystem` in the current scope
+   --> src/system.rs:104:19
+    |
+104 |         self.time.bootstrap().expect("time bootstrap failed");
+    |                   ^^^^^^^^^ method not found in `time::TimeSystem`
+    |
+   ::: src/time/mod.rs:38:1
+    |
+ 38 | pub struct TimeSystem {
+    | --------------------- method `bootstrap` not found for this struct
+
+error[E0599]: no method named `enqueue` found for struct `SchedulerManager` in the current scope
+  --> src/sys_runtime.rs:82:11
+   |
+82 |     sched.enqueue(1);
+   |           ^^^^^^^
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `enqueue` not found for this struct
+   |
+help: there is a method `enqueue_task` with a similar name
+   |
+82 |     sched.enqueue_task(1);
+   |                  +++++
+
+error[E0599]: no method named `enqueue` found for struct `SchedulerManager` in the current scope
+  --> src/sys_runtime.rs:83:11
+   |
+83 |     sched.enqueue(2);
+   |           ^^^^^^^
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `enqueue` not found for this struct
+   |
+help: there is a method `enqueue_task` with a similar name
+   |
+83 |     sched.enqueue_task(2);
+   |                  +++++
+
+error[E0599]: no method named `pick_next` found for struct `SchedulerManager` in the current scope
+  --> src/sys_runtime.rs:87:32
+   |
+87 |         if let Ok(pid) = sched.pick_next() {
+   |                                ^^^^^^^^^ method not found in `SchedulerManager`
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `pick_next` not found for this struct
+
+error[E0609]: no field `vm_id` on type `&vm::types::Vm`
+  --> src/virt/checkpoint.rs:64:46
+   |
+64 |         self.snapshots.push(Snapshot::new(vm.vm_id, &[]));
+   |                                              ^^^^^ unknown field
+   |
+   = note: available fields are: `pid`, `start_addr`, `end_addr`
+
+error[E0599]: no method named `enqueue_with` found for struct `SchedulerManager` in the current scope
+  --> src/self_check.rs:64:11
+   |
+64 |     sched.enqueue_with(10, SchedClass::Cfs, 120, 0);
+   |           ^^^^^^^^^^^^
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `enqueue_with` not found for this struct
+   |
+help: there is a method `enqueue_task` with a similar name, but with different arguments
+  --> src/sched/manager.rs:64:5
+   |
+64 |     pub fn enqueue_task(&mut self, task: &mut Task) {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `enqueue_with` found for struct `SchedulerManager` in the current scope
+  --> src/self_check.rs:65:11
+   |
+65 |     sched.enqueue_with(20, SchedClass::Rt, 10, 0);
+   |           ^^^^^^^^^^^^
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `enqueue_with` not found for this struct
+   |
+help: there is a method `enqueue_task` with a similar name, but with different arguments
+  --> src/sched/manager.rs:64:5
+   |
+64 |     pub fn enqueue_task(&mut self, task: &mut Task) {
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+error[E0599]: no method named `pick_next` found for struct `SchedulerManager` in the current scope
+  --> src/self_check.rs:66:26
+   |
+66 | ...k = sched.pick_next() == Ok(20) && sched.set_affinity(10, 1).is_ok();
+   |              ^^^^^^^^^ method not found in `SchedulerManager`
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `pick_next` not found for this struct
+
+error[E0599]: no method named `set_affinity` found for struct `SchedulerManager` in the current scope
+  --> src/self_check.rs:66:57
+   |
+66 | ...&& sched.set_affinity(10, 1).is_ok();
+   |             ^^^^^^^^^^^^ method not found in `SchedulerManager`
+   |
+  ::: src/sched/manager.rs:20:1
+   |
+20 | pub struct SchedulerManager {
+   | --------------------------- method `set_affinity` not found for this struct
+
+warning: unused variable: `i`
+  --> src/crypto/mod.rs:99:18
+   |
+99 |             for (i, (x, p)) in xored_chunk.iter_mut().zip(prev_block.ite...
+   |                  ^ help: if this is intentional, prefix it with an underscore: `_i`
+   |
+   = note: `#[warn(unused_variables)]` (part of `#[warn(unused)]`) on by default
+
+warning: unused variable: `device`
+  --> src/drivers/mod.rs:77:28
+   |
+77 |     fn match_device(&self, device: &PciDevice) -> bool {
+   |                            ^^^^^^ help: if this is intentional, prefix it with an underscore: `_device`
+
+warning: unused variable: `device`
+  --> src/drivers/mod.rs:82:25
+   |
+82 |     fn probe(&mut self, device: &PciDevice) -> Result<(), DriverError> {
+   |                         ^^^^^^ help: if this is intentional, prefix it with an underscore: `_device`
+
+warning: unused variable: `device`
+  --> src/drivers/mod.rs:86:26
+   |
+86 |     fn remove(&mut self, device: &PciDevice) -> Result<(), DriverError> {
+   |                          ^^^^^^ help: if this is intentional, prefix it with an underscore: `_device`
+
+error[E0594]: cannot assign to `segment.attached_count`, which is behind a `&` reference
+  --> src/ipc/mod.rs:86:9
+   |
+86 |         segment.attached_count += 1;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^ `segment` is a `&` reference, so it cannot be written to
+   |
+help: consider specifying this binding's type
+   |
+84 |         let segment: &mut ShmSegment = self.segments.get(&id).ok_or(ShmError::NotFound)?;
+   |                    +++++++++++++++++
+
+warning: unused variable: `ptr`
+  --> src/mm/slab/types.rs:32:28
+   |
+32 |     pub fn free(&mut self, ptr: usize) {
+   |                            ^^^ help: if this is intentional, prefix it with an underscore: `_ptr`
+
+warning: unused variable: `page_flags`
+   --> src/mm/swap.rs:191:35
+    |
+191 |     fn select_area_for_out(&self, page_flags: u64) -> Option<&SwapArea> {
+    |                                   ^^^^^^^^^^ help: if this is intentional, prefix it with an underscore: `_page_flags`
+
+error[E0499]: cannot borrow `self.priority_queues[_]` as mutable more than once at a time
+   --> src/sched/rt.rs:126:34
+    |
+123 | ...t_task(&mut self) -> Option<&mut RtTask> {
+    |           - let's call the lifetime of this reference `'1`
+...
+126 | ...Some(queue) = &mut self.priority_queues[priority as usize] {
+    |                  ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ `self.priority_queues[_]` was mutably borrowed here in the previous iteration of the loop
+...
+129 | ... return queue.get_mut(0);
+    |            ---------------- returning this value requires that `self.priority_queues[_]` is borrowed for `'1`
+
+warning: unnecessary `unsafe` block
+   --> src/time/timer.rs:112:13
+    |
+112 |             unsafe { std::arch::x86_64::_mm_pause(); }
+    |             ^^^^^^ unnecessary `unsafe` block
+    |
+    = note: `#[warn(unused_unsafe)]` (part of `#[warn(unused)]`) on by default
+
+warning: unnecessary `unsafe` block
+   --> src/time/timer.rs:415:21
+    |
+415 |     let frequency = unsafe { 
+    |                     ^^^^^^ unnecessary `unsafe` block
+
+warning: unnecessary `unsafe` block
+   --> src/time/timer.rs:422:9
+    |
+422 |         unsafe { std::arch::x86_64::_mm_pause(); }
+    |         ^^^^^^ unnecessary `unsafe` block
+
+warning: variable does not need to be mutable
+  --> src/time/clocksource.rs:26:17
+   |
+26 |             let mut cs = Clocksource::new("TSC", ClockSourceType::TSC);
+   |                 ----^^
+   |                 |
+   |                 help: remove this `mut`
+   |
+   = note: `#[warn(unused_mut)]` (part of `#[warn(unused)]`) on by default
+
+Some errors have detailed explanations: E0061, E0204, E0277, E0308, E0369, E0432, E0433, E0499, E0560...
+For more information about an error, try `rustc --explain E0061`.
+warning: `rust_linux_kernel` (lib) generated 32 warnings
+error: could not compile `rust_linux_kernel` (lib) due to 210 previous errors; 32 warnings emitted

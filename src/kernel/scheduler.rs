@@ -1,12 +1,18 @@
+//! Сcheduler for Linux Kernel - All Algorithms
+
+use super::types::{Task, TaskState};
 use std::collections::VecDeque;
 
-use super::error::KernelError;
-use super::types::{Task, TaskState};
-
-#[derive(Debug, Default)]
+#[derive(Debug)]
 pub struct Scheduler {
     next_pid: u32,
     runq: VecDeque<Task>,
+}
+
+impl Default for Scheduler {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Scheduler {
@@ -20,37 +26,30 @@ impl Scheduler {
     pub fn spawn(&mut self, name: &str) -> u32 {
         let pid = self.next_pid;
         self.next_pid += 1;
-        self.runq.push_back(Task {
-            pid,
-            name: name.to_string(),
-            state: TaskState::Ready,
-        });
+        let task = Task::new(pid, name);
+        self.runq.push_back(task);
         pid
     }
 
-    pub fn schedule_next(&mut self) -> Result<Task, KernelError> {
-        let mut task = self.runq.pop_front().ok_or(KernelError::EmptyRunQueue)?;
+    pub fn schedule_next(&mut self) -> Option<Task> {
+        let mut task = self.runq.pop_front()?;
         task.state = TaskState::Running;
         let running = task.clone();
         task.state = TaskState::Ready;
         self.runq.push_back(task);
-        Ok(running)
+        Some(running)
     }
 
-    pub fn stop(&mut self, pid: u32) -> Result<(), KernelError> {
-        for t in &mut self.runq {
-            if t.pid == pid {
-                t.state = TaskState::Stopped;
-                return Ok(());
-            }
+    pub fn stop(&mut self, pid: u32) -> bool {
+        if let Some(pos) = self.runq.iter().position(|t| t.pid == pid) {
+            self.runq[pos].state = TaskState::Stopped;
+            true
+        } else {
+            false
         }
-        Err(KernelError::TaskNotFound)
     }
 
     pub fn runnable_count(&self) -> usize {
-        self.runq
-            .iter()
-            .filter(|t| matches!(t.state, TaskState::Ready | TaskState::Running))
-            .count()
+        self.runq.len()
     }
 }

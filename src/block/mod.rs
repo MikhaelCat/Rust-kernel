@@ -1,12 +1,7 @@
-pub mod bio;
-pub mod cache;
-pub mod device;
-pub mod elevator;
-pub mod error;
-pub mod manager;
-pub mod mq;
-pub mod queue;
-pub mod request;
+//! Block subsystem statistics
 
-pub use error::BlockError;
-pub use manager::BlockManager;
+#[derive(Debug, Clone, Default)]
+pub struct BlockStats {
+    pub io_count: u64,
+    pub bytes_processed: u64,
+}

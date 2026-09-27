@@ -1,70 +1,101 @@
-use super::clockevent::ClockEvent;
-use super::clocksource::ClockSource;
-use super::error::TimeError;
-use super::hrtimer::HrTimer;
-use super::ntp::NtpAdjust;
-use super::tick::Tick;
-use super::timerfd::TimerFd;
+//! Timer Management System
 
-#[derive(Debug, Default)]
-pub struct TimeManager {
-    tick: Tick,
-    hrtimer: HrTimer,
-    timerfd: TimerFd,
-    event: ClockEvent,
-    source: Option<ClockSource>,
-    ntp_ppm: i32,
+use std::collections::BTreeMap;
+
+#[derive(Debug, Clone)]
+pub struct Timer {
+    pub id: u32,
+    pub expires_at: u64,
+    pub handler_id: u32,
+    pub repeats: bool,
 }
 
-impl TimeManager {
+#[derive(Debug, Clone)]
+pub struct TimerHandler {
+    pub handler_id: u32,
+    pub name: String,
+}
+
+#[derive(Debug)]
+pub struct TimerSubsystem {
+    pub timers: BTreeMap<u64, Timer>,
+    pub handlers: Vec<TimerHandler>,
+    pub next_id: u32,
+    pub current_time: u64,
+}
+
+impl Default for TimerSubsystem {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl TimerSubsystem {
     pub fn new() -> Self {
-        Self::default()
-    }
-
-    pub fn set_clocksource(&mut self, src: ClockSource) {
-        self.source = Some(src);
-    }
-
-    pub fn tick(&mut self) {
-        self.tick.inc();
-        self.event.fire();
-        self.timerfd.tick();
-    }
-
-    pub fn advance_ns(&mut self, ns: u64) {
-        self.hrtimer.advance_ns(ns);
-    }
-
-    pub fn adjust_ntp(&mut self, adj: NtpAdjust) -> Result<(), TimeError> {
-        if adj.ppm.abs() > 500_000 {
-            return Err(TimeError::InvalidAdjustment);
+        Self {
+            timers: BTreeMap::new(),
+            handlers: Vec::new(),
+            next_id: 1,
+            current_time: 0,
         }
-        self.ntp_ppm = adj.ppm;
-        Ok(())
     }
 
-    pub fn jiffies(&self) -> u64 {
-        self.tick.jiffies()
+    pub fn add_handler(&mut self, name: &str) -> u32 {
+        let id = self.next_id;
+        self.handlers.push(TimerHandler {
+            handler_id: id,
+            name: name.to_string(),
+        });
+        self.next_id += 1;
+        id
     }
 
-    pub fn now_ns(&self) -> u64 {
-        self.hrtimer.now_ns()
+    pub fn start_timer(&mut self, timeout_ns: u64, handler_id: u32) -> u32 {
+        let id = self.next_id;
+        let expires_at = self.current_time + timeout_ns;
+        
+        self.timers.insert(expires_at, Timer {
+            id,
+            expires_at,
+            handler_id,
+            repeats: false,
+        });
+        
+        self.next_id += 1;
+        id
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+    pub fn stop_timer(&mut self, timer_id: u32) -> bool {
+        self.timers.retain(|_, t| t.id != timer_id);
+        true
+    }
 
-    #[test]
-    fn time_flow() {
-        let mut t = TimeManager::new();
-        t.set_clocksource(ClockSource::monotonic());
-        t.tick();
-        t.advance_ns(1000);
-        t.adjust_ntp(NtpAdjust::new(120))
-            .expect("ntp adjust failed");
-        assert_eq!(t.jiffies(), 1);
-        assert_eq!(t.now_ns(), 1000);
+    pub fn advance_time(&mut self, delta_ns: u64) -> Vec<u32> {
+        self.current_time += delta_ns;
+        
+        let mut expired_handlers = Vec::new();
+        let current_time = self.current_time;
+        
+        // Find and remove expired timers
+        let to_remove: Vec<u64> = self.timers.keys()
+            .filter(|&&t| t <= current_time)
+            .copied()
+            .collect();
+        
+        for expires_at in to_remove {
+            if let Some(timer) = self.timers.remove(&expires_at) {
+                expired_handlers.push(timer.handler_id);
+            }
+        }
+        
+        expired_handlers
+    }
+
+    pub fn pending_timers(&self) -> usize {
+        self.timers.len()
+    }
+
+    pub fn next_expiration(&self) -> Option<u64> {
+        self.timers.keys().next().copied()
     }
 }

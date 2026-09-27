@@ -1,0 +1,105 @@
+🔬 ЗАПУСК ПОЛНОЙ СИСТЕМЫ ТЕСТИРОВАНИЯ ЯДРА LINUX
+=================================================
+Working directory: /home/mihail/Documents/Qoder/2026-09-22/chat-4/linux-rust-kernel
+
+==========================================================================
+📦 РАЗДЕЛ 1: БАЗОВЫЕ ТЕСТЫ CARGO (Критический путь сборки)
+==========================================================================
+[1/50] cargo check - базовая проверка синтаксиса...
+    Checking rust_linux_kernel v0.1.0 (/home/mihail/Documents/Qoder/2026-09-22/chat-4/linux-rust-kernel)
+error[E0432]: unresolved import `crate::pci`
+ --> src/drivers/mod.rs:8:12
+  |
+8 | use crate::pci::PciDevice;
+  |            ^^^ could not find `pci` in the crate root
+
+error[E0432]: unresolved import `crate::arch::cpu`
+   --> src/drivers/mod.rs:223:18
+    |
+223 | use crate::arch::cpu::*;
+    |                  ^^^ could not find `cpu` in `arch`
+
+error[E0432]: unresolved imports `crate::security::lsm::AccessError`, `crate::security::lsm::AccessVector`, `crate::security::lsm::Capabilities`, `crate::security::lsm::ObjectCategory`, `crate::security::lsm::Permission`, `crate::security::lsm::Permissions`, `crate::security::lsm::SecurityHook`, `crate::security::lsm::SecurityLabel`, `crate::security::lsm::SecurityPolicy`, `crate::security::lsm::SecuritySubsystem`, `crate::security::lsm::SyscallContext`, `crate::security::lsm::TaskSecurityContext`, `crate::security::lsm::RlimitType`, `crate::security::lsm::AvcStats`
+  --> src/security/mod.rs:11:5
+   |
+11 |     AccessError, AccessVector, Capabilities, ObjectCategory, Permission, Permissions,
+   |     ^^^^^^^^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^  ^^^^^^^^^^^ no `Permissions` in `security::lsm`
+   |     |            |             |             |               |
+   |     |            |             |             |               no `Permission` in `security::lsm`
+   |     |            |             |             no `ObjectCategory` in `security::lsm`
+   |     |            |             no `Capabilities` in `security::lsm`
+   |     |            no `AccessVector` in `security::lsm`
+   |     no `AccessError` in `security::lsm`
+12 |     SecurityHook, SecurityLabel, SecurityPolicy, SecuritySubsystem, SyscallContext,
+   |     ^^^^^^^^^^^^  ^^^^^^^^^^^^^  ^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^^^^  ^^^^^^^^^^^^^^
+   |     |             |              |               |
+   |     |             |              |               no `SecuritySubsystem` in `security::lsm`
+   |     |             |              no `SecurityPolicy` in `security::lsm`
+   |     |             no `SecurityLabel` in `security::lsm`
+   |     no `SecurityHook` in `security::lsm`
+13 |     TaskSecurityContext, RlimitType, AvcStats,
+   |     ^^^^^^^^^^^^^^^^^^^  ^^^^^^^^^^  ^^^^^^^^
+   |
+   = help: consider importing this struct instead:
+           std::thread::AccessError
+   = help: consider importing this struct instead:
+           std::fs::Permissions
+
+error[E0432]: unresolved import `crate::security::selinux::SelinuxPolicy`
+  --> src/security/mod.rs:16:9
+   |
+16 | pub use crate::security::selinux::SelinuxPolicy;
+   |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `SelinuxPolicy` in `security::selinux`
+
+error[E0432]: unresolved import `super::clocksource::ClockSource`
+ --> src/time/system.rs:1:37
+  |
+1 | ...r, clocksource::ClockSource, ntp::NtpAdjust};
+  |       ^^^^^^^^^^^^^^^^^^^^^^^^ no `ClockSource` in `time::clocksource`
+  |
+help: a similar name exists in the module (notice the capitalization)
+  |
+1 - use super::{TimeError, TimeManager, clocksource::ClockSource, ntp::NtpAdjust};
+1 + use super::{TimeError, TimeManager, clocksource::Clocksource, ntp::NtpAdjust};
+  |
+
+error[E0432]: unresolved import `crate::vm`
+ --> src/virt/checkpoint.rs:3:12
+  |
+3 | use crate::vm::Vm;
+  |            ^^ unresolved import
+  |
+help: a similar path exists
+  |
+3 | use crate::mm::vm::Vm;
+  |            ++++
+
+error[E0432]: unresolved import `crate::boot::recovery`
+   --> src/init/mod.rs:157:18
+    |
+157 | use crate::boot::recovery::{RecoveryMode, choose_recovery};
+    |                  ^^^^^^^^ could not find `recovery` in `boot`
+
+error[E0432]: unresolved import `crate::sched::CfsStats`
+ --> src/kernel/stats.rs:5:5
+  |
+5 | use crate::sched::CfsStats;
+  |     ^^^^^^^^^^^^^^^^^^^^^^ no `CfsStats` in `sched`
+  |
+help: consider importing this struct instead
+  |
+5 | use crate::sched::cfs::CfsStats;
+  |                   +++++
+
+error[E0432]: unresolved import `crate::block::BlockStats`
+ --> src/kernel/stats.rs:9:5
+  |
+9 | use crate::block::BlockStats;
+  |     ^^^^^^^^^^^^^^^^^^^^^^^^ no `BlockStats` in `block`
+
+error[E0432]: unresolved import `crate::drivers::DriverStats`
+  --> src/kernel/stats.rs:10:5
+   |
+10 | use crate::drivers::DriverStats;
+   |     ^^^^^^^^^^^^^^^^^^^^^^^^^^^ no `DriverStats` in `drivers`
+

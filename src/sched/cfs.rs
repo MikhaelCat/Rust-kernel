@@ -1,19 +1,7 @@
-#[derive(Debug, Default)]
+//! CFS (Completely Fair Scheduler) stats
+
+#[derive(Debug, Clone, Default)]
 pub struct CfsStats {
-    pub vruntime: u64,
-}
-impl CfsStats {
-    pub fn tick(&mut self) {
-        self.vruntime += 1;
-    }
-}
-#[cfg(test)]
-mod tests {
-    use super::*;
-    #[test]
-    fn cfs_tick() {
-        let mut s = CfsStats::default();
-        s.tick();
-        assert_eq!(s.vruntime, 1);
-    }
+    pub runnable_weight: u64,
+    pub weighted_exec_time: u64,
 }

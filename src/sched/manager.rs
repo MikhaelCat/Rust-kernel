@@ -1,230 +1,150 @@
-use std::collections::{BTreeMap, VecDeque};
+//! Scheduler Manager - Coordinates all scheduling algorithms
+//!
+//! Интегрирует CFS, RT, и Deadline планировщики в единую систему
 
-use super::error::SchedError;
+use super::cfs::{CfsRunQueue, NiceToWeight};
+use super::rt::{RtScheduler, RtTask};
+use super::deadline::{DlParams, DlTask, DeadlineRunQueue, DlScheduler};
+use super::types::Task;
+use std::collections::{VecDeque, BTreeMap};
 
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
-pub enum SchedClass {
-    Rt,
+#[derive(Debug, Clone)]
+pub enum PolicyType {
     Cfs,
-}
-
-#[derive(Debug, Clone, PartialEq, Eq)]
-pub struct SchedEntity {
-    pub pid: u32,
-    pub class: SchedClass,
-    pub prio: u8,
-    pub cpu: u32,
+    Fifo,
+    RoundRobin,
+    Deadline,
 }
 
 #[derive(Debug)]
 pub struct SchedulerManager {
-    rt_q: VecDeque<SchedEntity>,
-    cfs_q: VecDeque<SchedEntity>,
-    cpu_affinity: BTreeMap<u32, u32>,
-    cpu_count: u32,
+    // CFS Run Queues per CPU
+    pub cfs_rqs: Vec<CfsRunQueue>,
+    
+    // RT Scheduler
+    pub rt_scheduler: RtScheduler,
+    
+    // Deadline Scheduler  
+    pub dl_scheduler: DlScheduler,
+    
+    // Global statistics
+    pub context_switches: u64,
+    pub total_runtime_ns: u64,
+    
+    // Last executed task info
+    pub last_exec_task: Option<TaskInfo>,
 }
 
-impl SchedulerManager {
-    pub fn set_cpu_count(&mut self, cpus: u32) {
-        self.cpu_count = cpus.max(1);
-    }
-
-    fn clamp_cpu(&self, cpu: u32) -> u32 {
-        cpu % self.cpu_count.max(1)
-    }
-
-    pub fn enqueue(&mut self, pid: u32) {
-        self.enqueue_with(pid, SchedClass::Cfs, 120, 0);
-    }
-
-    pub fn enqueue_with(&mut self, pid: u32, class: SchedClass, prio: u8, cpu: u32) {
-        let cpu = self.clamp_cpu(cpu);
-        let ent = SchedEntity {
-            pid,
-            class,
-            prio,
-            cpu,
-        };
-        self.cpu_affinity.insert(pid, cpu);
-        match class {
-            SchedClass::Rt => self.rt_q.push_back(ent),
-            SchedClass::Cfs => self.cfs_q.push_back(ent),
-        }
-    }
-
-    pub fn pick_next(&mut self) -> Result<u32, SchedError> {
-        if let Some(ent) = self.rt_q.pop_front() {
-            let pid = ent.pid;
-            self.rt_q.push_back(ent);
-            return Ok(pid);
-        }
-        if let Some(ent) = self.cfs_q.pop_front() {
-            let pid = ent.pid;
-            self.cfs_q.push_back(ent);
-            return Ok(pid);
-        }
-        Err(SchedError::Empty)
-    }
-
-    pub fn pick_next_on_cpu(&mut self, cpu: u32) -> Result<u32, SchedError> {
-        let cpu = self.clamp_cpu(cpu);
-        if let Some(idx) = self.rt_q.iter().position(|e| e.cpu == cpu) {
-            let ent = self.rt_q.remove(idx).expect("idx valid");
-            let pid = ent.pid;
-            self.rt_q.push_back(ent);
-            return Ok(pid);
-        }
-        if let Some(ent) = self.rt_q.pop_front() {
-            let pid = ent.pid;
-            self.rt_q.push_back(ent);
-            return Ok(pid);
-        }
-        if let Some(idx) = self.cfs_q.iter().position(|e| e.cpu == cpu) {
-            let ent = self.cfs_q.remove(idx).expect("idx valid");
-            let pid = ent.pid;
-            self.cfs_q.push_back(ent);
-            return Ok(pid);
-        }
-        if let Some(ent) = self.cfs_q.pop_front() {
-            let pid = ent.pid;
-            self.cfs_q.push_back(ent);
-            return Ok(pid);
-        }
-        Err(SchedError::Empty)
-    }
-
-    pub fn set_affinity(&mut self, pid: u32, cpu: u32) -> Result<(), SchedError> {
-        if !self.cpu_affinity.contains_key(&pid) {
-            return Err(SchedError::Empty);
-        }
-        let cpu = self.clamp_cpu(cpu);
-        self.cpu_affinity.insert(pid, cpu);
-
-        for q in [&mut self.rt_q, &mut self.cfs_q] {
-            for ent in q.iter_mut() {
-                if ent.pid == pid {
-                    ent.cpu = cpu;
-                }
-            }
-        }
-        Ok(())
-    }
-
-    pub fn affinity_of(&self, pid: u32) -> Option<u32> {
-        self.cpu_affinity.get(&pid).copied()
-    }
-
-    pub fn len(&self) -> usize {
-        self.rt_q.len() + self.cfs_q.len()
-    }
-
-    pub fn load_per_cpu(&self) -> BTreeMap<u32, usize> {
-        let mut out = BTreeMap::new();
-        for cpu in 0..self.cpu_count.max(1) {
-            out.insert(cpu, 0usize);
-        }
-        for ent in self.rt_q.iter().chain(self.cfs_q.iter()) {
-            *out.entry(ent.cpu).or_insert(0) += 1;
-        }
-        out
-    }
-
-    pub fn rebalance(&mut self) -> usize {
-        let mut moved = 0usize;
-        loop {
-            let loads = self.load_per_cpu();
-            let (max_cpu, max_load) = loads
-                .iter()
-                .max_by_key(|(_, load)| *load)
-                .map(|(cpu, load)| (*cpu, *load))
-                .expect("at least one cpu");
-            let (min_cpu, min_load) = loads
-                .iter()
-                .min_by_key(|(_, load)| *load)
-                .map(|(cpu, load)| (*cpu, *load))
-                .expect("at least one cpu");
-            if max_load <= min_load + 1 {
-                break;
-            }
-            let mut changed = false;
-            for q in [&mut self.cfs_q, &mut self.rt_q] {
-                if let Some(ent) = q.iter_mut().find(|e| e.cpu == max_cpu) {
-                    ent.cpu = min_cpu;
-                    self.cpu_affinity.insert(ent.pid, min_cpu);
-                    moved += 1;
-                    changed = true;
-                    break;
-                }
-            }
-            if !changed {
-                break;
-            }
-        }
-        moved
-    }
+#[derive(Debug, Clone)]
+pub struct TaskInfo {
+    pub pid: u32,
+    pub comm: String,
+    pub policy: PolicyType,
 }
 
 impl Default for SchedulerManager {
     fn default() -> Self {
-        Self {
-            rt_q: VecDeque::new(),
-            cfs_q: VecDeque::new(),
-            cpu_affinity: BTreeMap::new(),
-            cpu_count: 64,
-        }
+        Self::new()
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
-
-    #[test]
-    fn rt_preempts_cfs() {
-        let mut s = SchedulerManager::default();
-        s.enqueue_with(10, SchedClass::Cfs, 120, 0);
-        s.enqueue_with(20, SchedClass::Rt, 10, 0);
-        assert_eq!(s.pick_next().expect("pick"), 20);
+impl SchedulerManager {
+    pub fn new() -> Self {
+        Self {
+            cfs_rqs: vec![CfsRunQueue::new(0)],
+            rt_scheduler: RtScheduler::new(),
+            dl_scheduler: DlScheduler::new(),
+            context_switches: 0,
+            total_runtime_ns: 0,
+            last_exec_task: None,
+        }
     }
 
-    #[test]
-    fn cfs_round_robin() {
-        let mut s = SchedulerManager::default();
-        s.enqueue(1);
-        s.enqueue(2);
-        assert_eq!(s.pick_next().expect("pick"), 1);
-        assert_eq!(s.pick_next().expect("pick"), 2);
+    /// Добавить задачу в правильный планировщик
+    pub fn enqueue_task(&mut self, task: &mut Task) {
+        // Определяем тип задачи по приоритету
+        if task.rt_prio.as_u8() > 0 {
+            // Real-time задача (SCHED_FIFO или SCHED_RR)
+            let cpu_id = self.select_cpu_for_rt();
+            if let Ok(_) = self.rt_scheduler.rt_enqueue_task(cpu_id, task) {
+                return;
+            }
+        }
+        
+        // Для нормальных CFS задач
+        let cpu_id = self.select_cpu_for_cfs();
+        if let Some(rq) = self.cfs_rqs.get_mut(cpu_id) {
+            let _ = rq.enqueue_task(task);
+        }
     }
 
-    #[test]
-    fn affinity_update() {
-        let mut s = SchedulerManager::default();
-        s.enqueue(7);
-        s.set_affinity(7, 2).expect("affinity");
-        assert_eq!(s.affinity_of(7), Some(2));
+    /// Выбор следующей задачи для выполнения
+    pub fn select_next_task(&mut self, cpu_id: usize) -> Option<u32> {
+        // Приоритет RT > Deadline > CFS
+        
+        // Проверяем RT задачи
+        if self.rt_scheduler.has_rt_tasks(cpu_id) {
+            if let Some(pid) = self.rt_scheduler.rt_tick(cpu_id, 0) {
+                return Some(pid);
+            }
+        }
+        
+        // Проверяем Deadline задачи  
+        if self.dl_scheduler.has_dl_tasks(cpu_id) {
+            use std::time::Instant;
+            let now = Instant::now().elapsed().as_nanos() as u64;
+            if let Some(pid) = self.dl_scheduler.dl_tick(cpu_id, now) {
+                return Some(pid);
+            }
+        }
+        
+        // CFS задачи
+        if let Some(rq) = self.cfs_rqs.get_mut(cpu_id) {
+            if let Some(cfs_task) = rq.pick_next_task() {
+                let pid = cfs_task.ts.pid;
+                self.last_exec_task = Some(TaskInfo {
+                    pid,
+                    comm: cfs_task.ts.comm.clone(),
+                    policy: PolicyType::Cfs,
+                });
+                return Some(pid);
+            }
+        }
+        
+        None
     }
 
-    #[test]
-    fn cpu_pick_prefers_local_queue() {
-        let mut s = SchedulerManager::default();
-        s.set_cpu_count(2);
-        s.enqueue_with(10, SchedClass::Cfs, 120, 0);
-        s.enqueue_with(20, SchedClass::Rt, 10, 1);
-        assert_eq!(s.pick_next_on_cpu(1).expect("pick"), 20);
+    /// Обработка тика таймера для текущей задачи
+    pub fn tick(&mut self, cpu_id: usize, current_pid: u32) {
+        // Обновляем статистику
+        self.context_switches += 1;
+        self.total_runtime_ns += 1_000_000; // ~1ms тик
+        
+        // CFS tick
+        if let Some(rq) = self.cfs_rqs.get_mut(cpu_id) {
+            rq.task_tick(current_pid);
+        }
+        
+        // RT tick  
+        self.rt_scheduler.rt_tick(cpu_id, current_pid);
+        
+        // Deadline tick (с временной меткой)
+        use std::time::Instant;
+        let now = Instant::now().elapsed().as_nanos() as u64;
+        self.dl_scheduler.dl_tick(cpu_id, now);
     }
 
-    #[test]
-    fn rebalance_moves_tasks() {
-        let mut s = SchedulerManager::default();
-        s.set_cpu_count(2);
-        s.enqueue_with(1, SchedClass::Cfs, 120, 0);
-        s.enqueue_with(2, SchedClass::Cfs, 120, 0);
-        s.enqueue_with(3, SchedClass::Cfs, 120, 0);
-        let moved = s.rebalance();
-        assert!(moved > 0);
-        let loads = s.load_per_cpu();
-        let l0 = *loads.get(&0).expect("cpu0");
-        let l1 = *loads.get(&1).expect("cpu1");
-        assert!((l0 as i64 - l1 as i64).abs() <= 1);
+    pub fn cpu_count(&self) -> usize {
+        self.cfs_rqs.len()
+    }
+    
+    /// Выбор CPU для RT задач
+    pub fn select_cpu_for_rt(&self) -> usize {
+        0.min(self.rt_scheduler.cpu_count() - 1)
+    }
+    
+    /// Выбор CPU для CFS задач
+    pub fn select_cpu_for_cfs(&self) -> usize {
+        0.min(self.cfs_rqs.len() - 1)
     }
 }

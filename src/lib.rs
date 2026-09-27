@@ -1,19 +1,28 @@
 pub mod arch;
 pub mod block;
 pub mod boot;
+pub mod compat;
+pub mod crypto;
+pub mod stats;
+
 pub mod drivers;
 pub mod fs;
+
 pub mod init;
 pub mod ipc;
 pub mod kernel;
 pub mod mm;
 pub mod net;
+pub mod pci;
 pub mod platform;
 pub mod power;
 pub mod sched;
+
 pub mod security;
 pub mod syscall;
 pub mod time;
+
+pub mod vm;
 
 pub mod system;
 
@@ -26,7 +35,6 @@ pub mod system_profile;
 
 pub mod sys_runtime;
 
-pub mod crypto;
 
 pub mod io_uring;
 pub mod libk;
@@ -47,5 +55,4 @@ pub mod system_deep_check;
 
 pub mod system_diag;
 
-pub mod compat;
 pub mod system_parity;

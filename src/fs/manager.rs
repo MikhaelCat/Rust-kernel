@@ -260,11 +260,11 @@ impl Vfs {
         let buf = self.files.get_mut(path).ok_or(FsError::NotFound)?;
         *buf = content.to_vec();
 
-        if let Some(d) = self.dentries.get(path)
-            && let Some(inode) = self.inodes.get_mut(&d.inode)
-        {
-            inode.size = content.len() as u64;
-            self.page_cache.put(d.inode, content);
+        if let Some(d) = self.dentries.get(path) {
+            if let Some(inode) = self.inodes.get_mut(&d.inode) {
+                inode.size = content.len() as u64;
+                self.page_cache.put(d.inode, content);
+            }
         }
         self.journal.record("write", path);
         Ok(())

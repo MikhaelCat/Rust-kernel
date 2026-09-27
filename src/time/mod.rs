@@ -1,33 +1,74 @@
-pub mod component_01;
-pub mod component_02;
-pub mod component_03;
-pub mod component_04;
-pub mod component_05;
-pub mod component_06;
-pub mod component_07;
-pub mod component_08;
-pub mod component_09;
-pub mod component_10;
+//! Time/Timer System - High-resolution timers and clock infrastructure
+//! 
+//! Реализация системы таймеров ядра Linux включая:
+//! - High-Resolution Timers (hrtimers)
+//! - Clocksource/Clockevent infrastructure  
+//! - Delay routines and sleep functions
+//! - NTP calibration support
 
-pub mod clockevent;
+pub mod timer;
 pub mod clocksource;
-pub mod error;
-pub mod hrtimer;
-pub mod manager;
-pub mod ntp;
-pub mod tick;
-pub mod timerfd;
+pub mod system;
 
-pub use error::TimeError;
-pub use manager::TimeManager;
+// Re-export commonly used types
+pub use crate::time::timer::{
+    Clocksource, ClockSourceType, TimerState, TimerResult, Hrtimer, TimerClock,
+    TimersError, Clockevent, ClockeventMode, ClockeventFeatures,
+    udelay, mdelay, msleep, usleep, rdtsc, sched_yield, ktime_get_mono_fast_ns,
+    NtpCalibration, get_ktime_get_mono_fast_ns,
+};
 
-pub fn now_tick() -> u64 {
-    1
+pub use crate::time::clocksource::{get_default_clocksource, select_clocksource};
+
+/// Time subsystem statistics
+#[derive(Debug, Clone, Default)]
+pub struct TimeStats {
+    pub timers_total: u64,
+    pub timers_active: u64,
+    pub interrupts_total: u64,
 }
 
-pub mod status;
-pub mod system;
-pub use status::TimeStatus;
-pub use system::TimeSystem;
+use std::sync::atomic::AtomicBool;
 
-pub mod components;
+/// Global timer manager singleton
+static TIMER_MANAGER: AtomicBool = AtomicBool::new(false);
+
+/// Time system interface
+#[derive(Debug, Clone)]
+pub struct TimeSystem {
+    pub initialized: bool,
+}
+
+/// Initialize timer system
+pub fn init_timer_system() -> Result<(), TimersError> {
+    // In production, would initialize all CPU timers
+    TIMER_MANAGER.store(true, std::sync::atomic::Ordering::SeqCst);
+    Ok(())
+}
+
+/// Check if timer system is initialized
+pub fn is_initialized() -> bool {
+    TIMER_MANAGER.load(std::sync::atomic::Ordering::SeqCst)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    
+    #[test]
+    fn test_init_shutdown() {
+        assert!(!is_initialized());
+        init_timer_system().unwrap();
+        assert!(is_initialized());
+    }
+    
+    #[test]
+    fn test_delay_timing() {
+        let start = rdtsc();
+        udelay(100); // 100 microseconds
+        let elapsed = rdtsc() - start;
+        
+        // Should have executed some instructions
+        assert!(elapsed > 0);
+    }
+}
